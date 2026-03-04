@@ -43,10 +43,9 @@ body {
   gap: 14px;
 }
 
-.landing-nav-shield {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.landing-nav-logo {
+  height: 44px;
+  object-fit: contain;
 }
 
 .landing-nav-title {
@@ -216,6 +215,9 @@ body {
 }
 
 .landing-hero-logo {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
   position: relative;
   z-index: 1;
   filter: drop-shadow(0 8px 32px rgba(45, 74, 46, 0.15));

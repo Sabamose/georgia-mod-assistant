@@ -465,9 +465,7 @@ function App() {
       <div className="landing">
         <nav className="landing-nav">
           <div className="landing-nav-left">
-            <div className="landing-nav-shield">
-              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#2d4a2e" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M12 8v4" stroke="#2d4a2e" strokeWidth="2" /><circle cx="12" cy="15" r="1" fill="#2d4a2e" /></svg>
-            </div>
+            <img src="/logo.png" alt="MOD" className="landing-nav-logo" />
             <div className="landing-nav-title">
               <span className="landing-nav-name">Ministry of Defense of Georgia</span>
               <span className="landing-nav-sub">{lang === "ka" ? "\u10E1\u10D0\u10E5\u10D0\u10E0\u10D7\u10D5\u10D4\u10DA\u10DD\u10E1 \u10D7\u10D0\u10D5\u10D3\u10D0\u10EA\u10D5\u10D8\u10E1 \u10E1\u10D0\u10DB\u10D8\u10DC\u10D8\u10E1\u10E2\u10E0\u10DD" : "AI Assistant — Nika"}</span>
@@ -498,7 +496,7 @@ function App() {
           </div>
           <div className="landing-hero-visual">
             <div className="landing-visual-ring" /><div className="landing-visual-ring landing-visual-ring-2" />
-            <svg className="landing-hero-logo" width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#2d4a2e" strokeWidth="1"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(45,74,46,0.1)" /><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" stroke="#2d4a2e" strokeWidth="1.5" /></svg>
+            <img src="/logo.png" alt="MOD Georgia" className="landing-hero-logo" />
           </div>
         </div>
         <div className="landing-footer"><span>{lang === "ka" ? "\u10E1\u10D0\u10E5\u10D0\u10E0\u10D7\u10D5\u10D4\u10DA\u10DD\u10E1 \u10D7\u10D0\u10D5\u10D3\u10D0\u10EA\u10D5\u10D8\u10E1 \u10E1\u10D0\u10DB\u10D8\u10DC\u10D8\u10E1\u10E2\u10E0\u10DD" : "Ministry of Defense of Georgia"} &middot; AI Assistant Nika</span></div>
@@ -511,9 +509,7 @@ function App() {
           <div className="panel-header">
             <div className="panel-header-left">
               {view === "chat" && <button className="header-back-btn" onClick={goHome}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg></button>}
-              <div className="header-shield">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-              </div>
+              <img src="/logo.png" alt="MOD" className="header-avatar" />
               <div className="header-info">
                 <span className="header-name">{view === "home" ? t.ministry : (lang === "ka" ? "\u10DC\u10D8\u10D9\u10D0" : "Nika")}</span>
                 <span className="header-status">{view === "home" ? t.aiAssistant : statusLabel}</span>
@@ -583,7 +579,7 @@ function App() {
                   </div>
                 )}
 
-                {isThinking && <div className="thinking-indicator"><div className="thinking-shield"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mod-primary)" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg></div><div className="thinking-dots"><span /><span /><span /></div></div>}
+                {isThinking && <div className="thinking-indicator"><img src="/logo.png" alt="" className="thinking-avatar" /><div className="thinking-dots"><span /><span /><span /></div></div>}
                 <div ref={messagesEndRef} />
               </div>
 
@@ -599,9 +595,7 @@ function App() {
 
         <button className={`collapse-btn ${isOpen ? "visible" : ""}`} onClick={() => setIsOpen(false)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
         <button className={`trigger ${isOpen ? "hidden" : ""}`} onClick={() => setIsOpen(true)}>
-          <div className="trigger-avatar-wrap">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2d4a2e" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(45,74,46,0.1)" /></svg>
-          </div>
+          <div className="trigger-avatar-wrap"><img src="/logo.png" alt="MOD" className="trigger-avatar" /></div>
           <div className="trigger-cta"><svg className="trigger-chat-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" /></svg><span>{lang === "ka" ? "\u10E9\u10D0\u10E2\u10D8 \u10DC\u10D8\u10D9\u10D0\u10E1\u10D7\u10D0\u10DC" : "Chat with Nika"}</span></div>
         </button>
       </div>
