@@ -88,7 +88,6 @@ const SERVICES = [
   { id: "contract", icon: "briefcase", titleKey: "contractTitle", descKey: "contractDesc" },
   { id: "deferral", icon: "clock", titleKey: "deferralTitle", descKey: "deferralDesc" },
   { id: "reserve", icon: "users", titleKey: "reserveTitle", descKey: "reserveDesc" },
-  { id: "faq", icon: "help", titleKey: "faqTitle", descKey: "faqDesc" },
 ];
 
 /* Service SVG Icons */

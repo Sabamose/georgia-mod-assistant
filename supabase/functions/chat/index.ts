@@ -3,6 +3,7 @@
 const ALLOWED_ORIGINS = [
   "https://georgia-mod-assistant.vercel.app",
   "http://localhost:5173",
+  "http://localhost:5177",
   "http://localhost:4173",
 ];
 
@@ -119,7 +120,7 @@ Nika: "This question is outside my expertise as a military service assistant. I 
 
 /* ── Knowledge Base: Full military service reference ── */
 
-const KNOWLEDGE_BASE = \`GEORGIA MINISTRY OF DEFENSE — COMPREHENSIVE KNOWLEDGE BASE
+const KNOWLEDGE_BASE = `GEORGIA MINISTRY OF DEFENSE — COMPREHENSIVE KNOWLEDGE BASE
 ================================================================================
 
 SECTION 1: MINISTRY OF DEFENSE — CONTACT INFORMATION
@@ -356,11 +357,11 @@ A: Grave/especially grave crime convictions = exemption. Minor offenses don't ne
 
 ================================================================================
 END OF KNOWLEDGE BASE
-================================================================================\`;
+================================================================================`;
 
 /* ── Language-specific prompt overrides ── */
 
-const PROMPT_OVERRIDE_EN = \`RESPONSE STYLE RULES — FOLLOW STRICTLY:
+const PROMPT_OVERRIDE_EN = `RESPONSE STYLE RULES — FOLLOW STRICTLY:
 1. Be SHORT and DIRECT. Lead with the answer immediately. No greetings, no filler.
 2. Do NOT repeat or paraphrase what the user said.
 3. Do NOT end responses with "Is there anything else I can help with?" or similar.
@@ -369,9 +370,9 @@ const PROMPT_OVERRIDE_EN = \`RESPONSE STYLE RULES — FOLLOW STRICTLY:
 6. Do NOT mention any websites, URLs, buttons, or UI elements.
 7. FORMATTING: When listing requirements or multiple items, ALWAYS use bullet points (- item).
 8. For personal/complex cases, always include: "For your specific situation, contact your local military registration center or the MOD hotline: +995 32 2 72 10 00"
-9. Include GEL amounts and time periods in every relevant answer.\`;
+9. Include GEL amounts and time periods in every relevant answer.`;
 
-const PROMPT_OVERRIDE_KA = \`CRITICAL LANGUAGE RULES — GEORGIAN (ქართული):
+const PROMPT_OVERRIDE_KA = `CRITICAL LANGUAGE RULES — GEORGIAN (ქართული):
 You MUST respond in grammatically correct Georgian. Follow these rules strictly:
 
 1. FORMALITY: Always use formal "თქვენ", NEVER "შენ". This is a government defense service.
@@ -419,7 +420,7 @@ Assistant: "აკრედიტებული უმაღლესი სა
 მნიშვნელოვანი ცვლილება 2024 წლიდან:
 - სტუდენტებმა ყოველწლიურად უნდა გაიარონ 1-თვიანი საბაზისო სამხედრო მომზადება ზაფხულში
 - 23 წელს ზემოთ სტუდენტები: 4 ზედიზედ ზაფხული, თითო 1 თვე
-- ყოველწლიურად უნდა წარადგინოთ ცნობა სასწავლებლიდან"\`;
+- ყოველწლიურად უნდა წარადგინოთ ცნობა სასწავლებლიდან"`;
 
 const PROMPT_OVERRIDES: Record<string, string> = {
   en: PROMPT_OVERRIDE_EN,
