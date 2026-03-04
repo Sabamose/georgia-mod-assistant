@@ -1,0 +1,441 @@
+GEORGIA MINISTRY OF DEFENSE — COMPREHENSIVE KNOWLEDGE BASE
+================================================================================
+
+ABOUT THIS KNOWLEDGE BASE
+This document contains comprehensive information about Georgian military service,
+the Defense Code, mandatory service, professional (contract) service, deferrals,
+exemptions, alternative service, reserve forces, and related procedures. It is
+designed for the AI assistant "Nika" to accurately answer questions from Georgian
+citizens, conscripts, families, and diaspora Georgians.
+
+================================================================================
+SECTION 1: MINISTRY OF DEFENSE — CONTACT INFORMATION
+================================================================================
+
+Official Name: საქართველოს თავდაცვის სამინისტრო (Ministry of Defense of Georgia)
+Website: https://mod.gov.ge
+Address: 20 General G. Kvinitadze St., 0112 Tbilisi, Georgia
+Phone (Hotline): +995 32 2 72 10 00
+Email: info@mod.gov.ge
+
+Military Registration Centers (სამხედრო აღრიცხვის ცენტრები):
+- Located in every region and major city across Georgia
+- Tbilisi, Kutaisi, Batumi, Rustavi, Gori, Zugdidi, Telavi, Akhaltsikhe, Ozurgeti, Senaki, Poti, Marneuli, Gardabani, Sagaredjo, Mtskheta, Khashuri, Samtredia, Tsnori, Lagodekhi, Bolnisi, Gurjaani, Signagi, Ambrolauri
+
+Working Hours: Monday–Friday, 09:00–18:00
+Registration Period: January 1 – April 30 annually
+
+================================================================================
+SECTION 2: MANDATORY MILITARY SERVICE (ეროვნული სამხედრო სამსახური)
+================================================================================
+
+2.1 WHO MUST SERVE
+-------------------
+- All male citizens of Georgia aged 18–27
+- Must be registered in the military register
+- Must not have exemption or deferral grounds
+- Women are NOT subject to mandatory service (women may serve voluntarily as professional soldiers)
+
+2.2 MILITARY REGISTRATION
+--------------------------
+- Mandatory for all males aged 17–27
+- Registration period: January 1 – April 30 annually
+- Must register at your local military registration center (სამხედრო აღრიცხვის ცენტრი)
+- Required documents for registration:
+  - National ID card (პირადობის მოწმობა)
+  - Birth certificate
+  - Education documents (if applicable)
+  - Medical records/certificates
+  - 2 passport-size photographs (3x4 cm)
+  - Residence registration document
+
+2.3 SELECTION PROCESS
+----------------------
+- Electronic random selection (ელექტრონული შერჩევა) conducted by January 31 each year
+- Selected conscripts are notified officially
+- Failure to appear after notification: 1,000 GEL fine
+- Call-up for combat units begins April 15
+
+2.4 SERVICE TYPES AND DURATIONS
+---------------------------------
+A. Combat Units (საბრძოლო ქვედანაყოფები):
+   - Duration: 6 months
+   - Start: April 15 call-up
+
+B. Security/Supply Units (უზრუნველყოფის ქვედანაყოფები):
+   - Duration: 8 months
+
+C. Junior Commander / Specialty Training (უმცროსი მეთაური/სპეციალისტი):
+   - Duration: 11 months
+   - Includes advanced military training and specialization
+
+D. Students aged 23+ (University Students Program):
+   - 1-month summer basic military training
+   - Completed over 4 consecutive summers
+   - Mandatory since 2024 for students who received deferral
+
+2.5 BENEFITS DURING SERVICE
+-----------------------------
+- Paid service (monthly salary during mandatory service)
+- Annual leave (vacation days)
+- Workplace retention: employer must hold your position during service
+- Free public transportation throughout Georgia
+- Free meals, housing, uniform, and equipment provided
+- Medical care provided during service
+- Insurance coverage during service
+
+2.6 PENALTY FOR NON-COMPLIANCE
+-------------------------------
+- Failure to appear after official summons: 1,000 GEL fine
+- Evasion of military service is a criminal offense under Georgian law
+- Repeated violations may result in criminal prosecution
+
+================================================================================
+SECTION 3: DEFERRALS (გადავადება)
+================================================================================
+
+3.1 PAID DEFERRAL
+------------------
+- Fee: 5,000 GEL (increased from 2,000 GEL as of 2025)
+- One-time only: can be used only ONCE
+- Maximum duration: 1 year (changed from 2x18 months)
+- Payment must be made at the military registration center
+- After the deferral period expires, the person must serve or obtain another legal ground for deferral/exemption
+
+3.2 STUDENT DEFERRAL
+---------------------
+- Available for students enrolled in accredited higher education institutions
+- Deferral lasts until graduation
+- IMPORTANT: Since 2024, students receiving deferral MUST complete 1-month summer basic military training annually
+- Students aged 23 and above: serve through 4 consecutive 1-month summer trainings instead of regular service
+- Must provide enrollment certificate from the university annually
+- Applies to bachelor's, master's, and doctoral programs
+- Does NOT apply to students who were already deferred and then dropped out of university
+
+3.3 OTHER DEFERRAL GROUNDS
+----------------------------
+- Having 2 or more children (minor children under 18)
+- Single fathers (sole caretaker of minor child)
+- Sole providers for family (if military service would leave dependents without support)
+- Parliamentary candidates (during election period)
+- Temporary health issues (as determined by medical commission — temporarily unfit category)
+- Caring for a disabled family member who has no other caretaker
+
+3.4 PROCESS AND DOCUMENTATION
+-------------------------------
+Required documents for deferral application:
+- Application form (available at registration center)
+- National ID card
+- Supporting documents depending on ground:
+  - Student deferral: enrollment certificate, transcript
+  - Children: birth certificates of children
+  - Single father: birth certificate, court order or death certificate of other parent
+  - Sole provider: documents proving dependency (court decision, social service certificate)
+  - Health: medical commission evaluation results
+  - Paid deferral: proof of payment (5,000 GEL)
+
+================================================================================
+SECTION 4: EXEMPTIONS (გათავისუფლება)
+================================================================================
+
+4.1 MEDICAL EXEMPTION
+-----------------------
+Medical fitness is evaluated by a permanent medical commission (სამედიცინო კომისია).
+
+Five medical fitness categories:
+1. ვარგისი (Fit) — fully fit for military service
+2. ვარგისი მცირე შეზღუდვებით (Fit with minor restrictions) — fit with some limitations on unit assignment
+3. ვარგისი შეზღუდვებით (Fit with limitations) — limited service, non-combat roles
+4. დროებით უვარგისი (Temporarily unfit) — temporary deferral for health reasons, re-evaluation after treatment
+5. უვარგისი (Unfit) — permanent exemption from military service
+
+The medical commission evaluates:
+- Physical health
+- Mental health
+- Chronic conditions
+- Disabilities
+- Vision, hearing, and other sensory functions
+
+Process:
+1. Report to military registration center
+2. Referred to permanent medical commission
+3. Medical examination and evaluation
+4. Decision issued (can be appealed)
+5. If "unfit" — permanent exemption granted
+
+4.2 OTHER EXEMPTION GROUNDS
+-----------------------------
+- Completed foreign military service (must provide documentation — foreign military service certificate, apostilled and translated)
+- Convicted of grave or especially grave crimes (საქართველოს სისხლის სამართლის კოდექსი)
+- Members of Parliament (პარლამენტის წევრები)
+- Only son in a family where another family member died in military service or as a result of war
+- Persons whose legal capacity has been restricted by court decision
+- Orthodox clergy who have been ordained (სასულიერო პირები) — applies to officially recognized clergy of the Georgian Orthodox Church
+
+================================================================================
+SECTION 5: ALTERNATIVE SERVICE (ალტერნატიული სამსახური)
+================================================================================
+
+5.1 ELIGIBILITY
+----------------
+- For conscientious objectors — persons who cannot serve in the military due to religious beliefs or ethical convictions
+- Must demonstrate genuine conscientious objection (not simply unwillingness)
+- Application must be submitted to the military registration center with supporting documentation
+
+5.2 DURATION
+--------------
+- 12 months (reduced from 18 months after 2025 Defense Code amendments)
+- Longer than regular military service to maintain deterrent effect
+
+5.3 SECTORS AND PLACEMENT
+---------------------------
+Alternative service may be performed in the following sectors:
+- Emergency and rescue services (საგანგებო სიტუაციების სამსახური)
+- Environmental protection and forestry
+- Construction and infrastructure
+- Agriculture and rural development
+- Social services (hospitals, elderly care, disability services)
+- Municipal services
+
+5.4 PROCESS
+-------------
+1. Submit application to military registration center citing religious or ethical grounds
+2. State commission reviews the application
+3. Commission determines placement sector and location
+4. Serve 12 months in assigned position
+5. Upon completion, receive certificate of completed alternative service
+
+5.5 DOCUMENTATION REQUIRED
+-----------------------------
+- Application form
+- National ID card
+- Statement explaining religious or ethical grounds for conscientious objection
+- Supporting documentation (letter from religious organization, personal statement)
+- Medical fitness certificate (must still be medically fit)
+
+================================================================================
+SECTION 6: CONTRACT/PROFESSIONAL MILITARY SERVICE (საკონტრაქტო სამსახური)
+================================================================================
+
+6.1 ELIGIBILITY
+----------------
+- Georgian citizens
+- Age: 18–35 years
+- Must pass medical fitness evaluation
+- Must pass physical fitness test
+- Must pass background check
+- Education: minimum secondary education (საშუალო განათლება)
+- No criminal record for grave/especially grave crimes
+- Both men and women are eligible
+
+6.2 CONTRACT TERMS
+-------------------
+- Initial contract: 4-year term
+- Renewable upon mutual agreement
+- Probation period: 3 months
+
+6.3 SALARY AND COMPENSATION
+------------------------------
+- Minimum starting salary: 1,050 GEL/month
+- Salary increases with rank and years of service
+- Additional bonuses for:
+  - Special operations units
+  - Hazardous duty
+  - Service in remote areas
+  - Foreign deployments (NATO missions, peacekeeping)
+
+Rank-based salary progression (approximate):
+- Private (რიგითი): 1,050 GEL
+- Corporal (კაპრალი): 1,150–1,250 GEL
+- Sergeant (სერჟანტი): 1,300–1,500 GEL
+- Senior Sergeant (უფროსი სერჟანტი): 1,500–1,800 GEL
+- Officers: 2,000+ GEL (varies significantly by rank and position)
+
+6.4 BENEFITS
+--------------
+- NATO-standard equipment and training
+- Free medical care for service member and family
+- Social and legal guarantees
+- Housing allowance or military housing
+- Free public transportation
+- Annual leave: 30 calendar days
+- Education and training opportunities (including NATO courses abroad)
+- Career advancement opportunities
+- Pension after 20+ years of service
+- Life and health insurance
+
+6.5 APPLICATION PROCESS
+-------------------------
+1. Visit your nearest military registration center
+2. Submit application with required documents:
+   - National ID card
+   - Education certificate
+   - Medical fitness certificate
+   - 4 passport-size photographs (3x4 cm)
+   - Military service record (if applicable)
+3. Pass medical examination
+4. Pass physical fitness test
+5. Pass interview/background check
+6. Sign contract
+7. Begin basic training
+
+6.6 CAREER SPECIALIZATIONS
+-----------------------------
+- Infantry (ქვეითი)
+- Artillery (არტილერია)
+- Engineering (საინჟინრო)
+- Communications/Signal (კავშირგაბმულობა)
+- Intelligence (დაზვერვა)
+- Logistics (ლოჯისტიკა)
+- Medical corps (სამედიცინო)
+- Special operations (სპეციალური ოპერაციები)
+- Air defense (საჰაერო თავდაცვა)
+- Cyber defense (კიბერთავდაცვა)
+- Military police (სამხედრო პოლიცია)
+
+================================================================================
+SECTION 7: RESERVE FORCES (რეზერვი)
+================================================================================
+
+7.1 ACTIVE RESERVE PROGRAM
+-----------------------------
+- The Ministry of Defense is actively expanding the reserve force
+- All citizens who completed mandatory military service are automatically registered in the reserve
+- Reserve service age: up to 40 years (enlisted), up to 50 years (officers)
+
+7.2 POST-SERVICE INTEGRATION
+------------------------------
+- After completing mandatory or contract service, soldiers are placed in reserve
+- Reserve status documented in military service record
+- Must keep registration center informed of address changes
+
+7.3 TRAINING OBLIGATIONS
+--------------------------
+- Reserve members may be called up for training exercises
+- Training duration: up to 30 days per year
+- Employer must grant leave for reserve training
+- Compensation provided during training periods
+- Training includes refresher courses on weapons, tactics, and procedures
+
+7.4 MOBILIZATION
+------------------
+- In case of war or national emergency, reserve forces may be fully mobilized
+- Mobilization order issued by the President
+- All reserve members must report to designated assembly points
+- Failure to report during mobilization is a criminal offense
+
+================================================================================
+SECTION 8: COMPENSATION AND BENEFITS
+================================================================================
+
+8.1 WOUNDED SOLDIERS
+-----------------------
+- One-time compensation: 20,000 GEL for soldiers wounded during service
+- Medical treatment covered by the state
+- Rehabilitation programs available
+- Disability benefits based on degree of disability
+
+8.2 FAMILIES OF DECEASED SOLDIERS
+------------------------------------
+- One-time compensation: 30,000 GEL for families of soldiers who died during peacetime service
+- War deaths: 100,000 GEL one-time compensation
+- Monthly pension for dependents
+- Children's education assistance
+
+8.3 HOUSING CO-FINANCING
+--------------------------
+- Available to service members
+- Can be applied every 3 years
+- Government co-finances housing purchase or mortgage
+- Details available at military registration centers
+
+8.4 ADDITIONAL SOCIAL GUARANTEES
+----------------------------------
+- Free public transportation for active service members
+- Priority enrollment in state educational institutions for veterans
+- Employment assistance for discharged service members
+- Psychological support services
+- Legal consultation services
+
+================================================================================
+SECTION 9: CITIZENSHIP AND MILITARY (DIASPORA INFORMATION)
+================================================================================
+
+9.1 DUAL CITIZENS' OBLIGATIONS
+---------------------------------
+- Georgian citizens who also hold foreign citizenship are NOT exempt from military obligations
+- Dual citizenship does not remove the requirement to register and serve
+- Males aged 18–27 with Georgian citizenship must fulfill military obligations regardless of where they live
+- If you completed military service in a foreign country's military, you may apply for exemption with documented proof
+
+9.2 CITIZENSHIP RENUNCIATION AND MILITARY
+--------------------------------------------
+- Males aged 18–27 CANNOT renounce Georgian citizenship if they have unfulfilled military obligations
+- Must either:
+  a) Complete military service first
+  b) Obtain legal exemption
+  c) Pay the deferral fee and wait until obligations expire (age 27)
+- Renunciation is also blocked if there are pending criminal matters
+
+9.3 RETURNING DIASPORA
+-------------------------
+- Georgian citizens who lived abroad and return to Georgia before age 27 must register for military service
+- Prior foreign military service may count toward exemption (documentation required)
+- Contact the nearest military registration center upon return
+- Late registration may result in administrative penalties
+
+9.4 CONSULAR INFORMATION
+---------------------------
+- Georgian embassies and consulates can provide information about military obligations
+- Cannot process military registration abroad — must be done in Georgia
+- Consulates can assist with document apostille and translation for foreign military service certificates
+
+================================================================================
+SECTION 10: FREQUENTLY ASKED QUESTIONS (FAQ)
+================================================================================
+
+Q: How is medical fitness evaluated?
+A: You report to your military registration center, which refers you to the permanent medical commission. The commission conducts a comprehensive medical examination and assigns one of five fitness categories: fit, fit with minor restrictions, fit with limitations, temporarily unfit, or unfit. The "unfit" category results in permanent exemption.
+
+Q: What documents do I need for military registration?
+A: National ID card, birth certificate, education documents, medical records, 2 photos (3x4 cm), and residence registration document.
+
+Q: What happens after I complete my service?
+A: You are automatically placed in the reserve. You receive a military service completion certificate. Your employer (if you had one before service) must reinstate you. You may be called up for reserve training exercises (up to 30 days per year).
+
+Q: Can women serve in the military?
+A: Women are not subject to mandatory military service. However, women can voluntarily join the professional/contract military service. Women serve in all branches and specializations. Eligibility: Georgian citizen, age 18–35, must pass fitness tests.
+
+Q: Are Orthodox clergy exempt?
+A: Yes, ordained clergy of the Georgian Orthodox Church are exempt from mandatory military service. This must be documented with official church certification.
+
+Q: What if I am a student abroad?
+A: If you are enrolled in an accredited university abroad, you may apply for student deferral. You must provide apostilled enrollment certificate translated into Georgian. Contact the nearest military registration center or Georgian embassy for guidance.
+
+Q: What is the penalty for avoiding the draft?
+A: Failure to appear after official summons results in a 1,000 GEL fine. Continued evasion is a criminal offense under Georgian law.
+
+Q: Can I choose which unit I serve in?
+A: No, assignment is determined by the military based on needs, your medical fitness category, education, and the results of the selection process. However, you may express preferences.
+
+Q: What if I am the sole provider for my family?
+A: You may qualify for deferral. You must provide documentation proving that your military service would leave your dependents without financial support. This includes court decisions, social service certificates, and financial documentation.
+
+Q: How do I apply for alternative service?
+A: Submit an application to your military registration center stating your religious or ethical grounds for conscientious objection. A state commission will review your application and determine placement. Alternative service lasts 12 months.
+
+Q: What is the minimum salary for contract soldiers?
+A: The minimum starting salary is 1,050 GEL/month. This increases with rank, years of service, and special assignments. Officers earn significantly more.
+
+Q: Can I join the military if I have a criminal record?
+A: Persons convicted of grave or especially grave crimes cannot serve. Minor offenses may not disqualify you, but a background check is conducted.
+
+Q: What training do conscripts receive?
+A: Basic military training including weapons handling, tactical movement, first aid, physical fitness, military discipline, and depending on unit assignment, specialized training (communications, engineering, medical, etc.).
+
+Q: Is there a way to serve without leaving my job?
+A: The reserve training program allows you to serve up to 30 days per year while maintaining civilian employment. Your employer must grant leave for this purpose.
+
+================================================================================
+END OF KNOWLEDGE BASE
+================================================================================
