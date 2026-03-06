@@ -79,6 +79,7 @@ export function createAnthropicCompatibleStream(options: {
   requestId: string;
   model: string;
   textStream: AsyncIterable<string>;
+  messageStopPayload?: Record<string, unknown>;
   onComplete?: () => void;
   onError?: (error: unknown) => void;
 }): ReadableStream<Uint8Array> {
@@ -127,7 +128,10 @@ export function createAnthropicCompatibleStream(options: {
           type: "content_block_stop",
           index: 0,
         }));
-        controller.enqueue(encodeEvent("message_stop", { type: "message_stop" }));
+        controller.enqueue(encodeEvent("message_stop", {
+          type: "message_stop",
+          ...(options.messageStopPayload || {}),
+        }));
         controller.close();
         options.onComplete?.();
       } catch (error) {

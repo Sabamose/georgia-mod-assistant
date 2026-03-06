@@ -1,12 +1,9 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import "./App.css";
+import { buildCenterLookupConversation, getCenterLookupReply } from "./centerLookup.js";
 
-// Public Supabase values keep the demo working even if Vercel public env vars are missing.
-const DEFAULT_SUPABASE_URL = "https://avmiutasxlrrvfaggmcp.supabase.co";
-const DEFAULT_SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2bWl1dGFzeGxycnZmYWdnbWNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTkwNTcsImV4cCI6MjA4ODIzNTA1N30.GOfF4yP-7hJfM9HrexmzaiTZ7HgBV8GT9dZKYtHrJBk";
-const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL).replace(/\s/g, "");
-const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY).replace(/\s/g, "");
+const SUPABASE_URL = String(import.meta.env.VITE_SUPABASE_URL || "").trim();
+const SUPABASE_ANON_KEY = String(import.meta.env.VITE_SUPABASE_ANON_KEY || "").trim();
 const THINKING_MIN_MS = 800;
 
 function getClientConfigError(language) {
@@ -40,8 +37,8 @@ const FlagKA = () => (
 );
 
 const LANGUAGES = [
-  { code: "en", displayCode: "EN", label: "English", Flag: FlagEN },
   { code: "ka", displayCode: "GE", label: "\u10E5\u10D0\u10E0\u10D7\u10E3\u10DA\u10D8", Flag: FlagKA },
+  { code: "en", displayCode: "EN", label: "English", Flag: FlagEN },
 ];
 
 const T = {
@@ -63,8 +60,8 @@ const T = {
     contractDesc: "Career opportunities & benefits",
     deferralTitle: "Deferrals & Exemptions",
     deferralDesc: "Student, medical, other grounds",
-    reserveTitle: "Reserve Forces",
-    reserveDesc: "Post-service & training",
+    centerTitle: "Find My Center",
+    centerDesc: "Exact branch address & directions",
     faqTitle: "FAQ",
     faqDesc: "Common questions answered",
   },
@@ -86,8 +83,8 @@ const T = {
     contractDesc: "\u10D9\u10D0\u10E0\u10D8\u10D4\u10E0\u10E3\u10DA\u10D8 \u10E8\u10D4\u10E1\u10D0\u10EB\u10DA\u10D4\u10D1\u10DA\u10DD\u10D1\u10D4\u10D1\u10D8",
     deferralTitle: "\u10D2\u10D0\u10D3\u10D0\u10D5\u10D0\u10D3\u10D4\u10D1\u10D0 \u10D3\u10D0 \u10D2\u10D0\u10D7\u10D0\u10D5\u10D8\u10E1\u10E3\u10E4\u10DA\u10D4\u10D1\u10D0",
     deferralDesc: "\u10E1\u10E2\u10E3\u10D3\u10D4\u10DC\u10E2\u10E3\u10E0\u10D8, \u10E1\u10D0\u10DB\u10D4\u10D3\u10D8\u10EA\u10D8\u10DC\u10DD, \u10E1\u10EE\u10D5\u10D0 \u10E1\u10D0\u10E4\u10E3\u10EB\u10D5\u10D4\u10DA\u10D8",
-    reserveTitle: "\u10E0\u10D4\u10D6\u10D4\u10E0\u10D5\u10D8",
-    reserveDesc: "\u10E1\u10D0\u10DB\u10E1\u10D0\u10EE\u10E3\u10E0\u10D8\u10E1 \u10E8\u10D4\u10DB\u10D3\u10D4\u10D2 \u10D3\u10D0 \u10EC\u10D5\u10E0\u10D7\u10DC\u10D4\u10D1\u10D0",
+    centerTitle: "\u10D8\u10DE\u10DD\u10D5\u10D4 \u10E9\u10D4\u10DB\u10D8 \u10EA\u10D4\u10DC\u10E2\u10E0\u10D8",
+    centerDesc: "\u10D6\u10E3\u10E1\u10E2\u10D8 \u10DB\u10D8\u10E1\u10D0\u10DB\u10D0\u10E0\u10D7\u10D8 \u10D3\u10D0 \u10D9\u10D5\u10DA\u10D0\u10D5\u10D8",
     faqTitle: "\u10EE\u10E8\u10D8\u10E0\u10D0\u10D3 \u10D3\u10D0\u10E1\u10DB\u10E3\u10DA\u10D8 \u10D9\u10D8\u10D7\u10EE\u10D5\u10D4\u10D1\u10D8",
     faqDesc: "\u10DE\u10D0\u10E1\u10E3\u10EE\u10D4\u10D1\u10D8 \u10D2\u10D0\u10D5\u10E0\u10EA\u10D4\u10DA \u10D9\u10D8\u10D7\u10EE\u10D5\u10D4\u10D1\u10D6\u10D4",
   },
@@ -97,7 +94,7 @@ const SERVICES = [
   { id: "mandatory", icon: "shield", titleKey: "mandatoryTitle", descKey: "mandatoryDesc" },
   { id: "contract", icon: "briefcase", titleKey: "contractTitle", descKey: "contractDesc" },
   { id: "deferral", icon: "clock", titleKey: "deferralTitle", descKey: "deferralDesc" },
-  { id: "reserve", icon: "users", titleKey: "reserveTitle", descKey: "reserveDesc" },
+  { id: "center", icon: "mapPin", titleKey: "centerTitle", descKey: "centerDesc" },
 ];
 
 const SERVICE_SEED_PROMPTS = {
@@ -105,13 +102,13 @@ const SERVICE_SEED_PROMPTS = {
     mandatory: "I need information about mandatory military service.",
     contract: "I need information about professional contract military service.",
     deferral: "I need information about deferrals and exemptions.",
-    reserve: "I need information about reserve service.",
+    center: "I want to find my military registration center.",
   },
   ka: {
     mandatory: "სავალდებულო სამხედრო სამსახურის შესახებ ინფორმაცია მინდა.",
     contract: "საკონტრაქტო სამხედრო სამსახურის შესახებ ინფორმაცია მინდა.",
     deferral: "გადავადებისა და გათავისუფლების შესახებ ინფორმაცია მინდა.",
-    reserve: "რეზერვის შესახებ ინფორმაცია მინდა.",
+    center: "მინდა ვიპოვო ჩემი სამხედრო აღრიცხვის ცენტრი.",
   },
 };
 
@@ -128,6 +125,7 @@ function ServiceIcon({ type, size = 28 }) {
     briefcase: <svg {...s}><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" /><path d="M12 12v.01" /></svg>,
     clock: <svg {...s}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>,
     users: <svg {...s}><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" /></svg>,
+    mapPin: <svg {...s}><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>,
     help: <svg {...s}><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>,
   };
   return icons[type] || null;
@@ -136,6 +134,31 @@ function ServiceIcon({ type, size = 28 }) {
 function formatTime(ts) {
   if (!ts) return "";
   return new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function getSafeHref(href, options = {}) {
+  const { allowMailto = false, allowTel = false } = options;
+  if (typeof href !== "string") return null;
+
+  const trimmed = href.trim();
+  if (!trimmed) return null;
+
+  if (allowMailto && trimmed.startsWith("mailto:")) {
+    return trimmed;
+  }
+
+  if (allowTel && trimmed.startsWith("tel:")) {
+    return trimmed;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.toString()
+      : null;
+  } catch {
+    return null;
+  }
 }
 
 /* Pre-process paragraph text */
@@ -167,6 +190,89 @@ function preprocessText(text) {
     result.push(line);
   }
   return result.join("\n");
+}
+
+function normalizeComparableText(text) {
+  return (text || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getStructuredTextSet(blocks) {
+  const values = new Set();
+
+  for (const block of blocks || []) {
+    if (block.type === "summary" && block.text) {
+      values.add(normalizeComparableText(block.text));
+    }
+
+    if (block.type === "verification_note" && Array.isArray(block.items)) {
+      for (const item of block.items) {
+        values.add(normalizeComparableText(item));
+      }
+    }
+  }
+
+  return values;
+}
+
+function isLowValuePreamble(paragraph, structuredTexts) {
+  const normalized = normalizeComparableText(paragraph);
+  if (!normalized) return true;
+  if (structuredTexts.has(normalized)) return true;
+
+  const bannedLeadPatterns = [
+    /^(სტატუსი|შედეგი|დასკვნა)\s*:/i,
+    /^(status|result|conclusion)\s*:/i,
+    /^ინფორმაციის მიხედვით[, ]/i,
+    /^მოკლედ[, ]/i,
+    /^ზოგადად[, ]/i,
+    /^based on the information[, ]/i,
+    /^in summary[, ]/i,
+    /^generally[, ]/i,
+  ];
+
+  if (bannedLeadPatterns.some((pattern) => pattern.test(paragraph.trim()))) {
+    return true;
+  }
+
+  const bannedGenericPatterns = [
+    /დამატებითი მოქმედება არ არის საჭირო/i,
+    /no further action is required/i,
+  ];
+
+  return bannedGenericPatterns.some((pattern) => pattern.test(paragraph));
+}
+
+function getRenderableAssistantText(message) {
+  const rawText = (message?.text || "")
+    .replace(/\+995\s*\(?\d{2,3}\)?\s*\d{3}\s*\d{2}\s*\d{2}/g, "")
+    .trim();
+
+  if (!rawText) return "";
+
+  const blocks = Array.isArray(message?.blocks) ? message.blocks : [];
+  if (blocks.length === 0) return rawText;
+
+  const paragraphs = rawText
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+  if (paragraphs.length === 0) return "";
+
+  const structuredTexts = getStructuredTextSet(blocks);
+  let firstUsefulIndex = 0;
+  while (
+    firstUsefulIndex < paragraphs.length &&
+    isLowValuePreamble(paragraphs[firstUsefulIndex], structuredTexts)
+  ) {
+    firstUsefulIndex += 1;
+  }
+
+  const cleaned = paragraphs.slice(firstUsefulIndex).join("\n\n").trim();
+  return cleaned;
 }
 
 /* Markdown renderer */
@@ -209,6 +315,260 @@ function inlineFormat(text) {
   return parts.length > 0 ? parts : text;
 }
 
+function GuidanceBlocks({ blocks, onQuickReply, language }) {
+  const [copiedKey, setCopiedKey] = useState(null);
+
+  const handleCopy = async (copyText, key) => {
+    if (!copyText || !navigator?.clipboard?.writeText) return;
+
+    try {
+      await navigator.clipboard.writeText(copyText);
+      setCopiedKey(key);
+      window.setTimeout(() => {
+        setCopiedKey((current) => (current === key ? null : current));
+      }, 1600);
+    } catch {
+      // Clipboard access can be blocked in some embedded browser contexts.
+    }
+  };
+
+  if (!Array.isArray(blocks) || blocks.length === 0) return null;
+
+  return (
+    <div className="guidance-blocks">
+      {blocks.map((block, index) => {
+        const key = `${block.type}-${index}`;
+
+        if (block.type === "summary") {
+          return (
+            <div key={key} className={`guidance-card guidance-summary ${block.tone ? `guidance-summary-${block.tone}` : ""}`}>
+              {block.title ? <div className="guidance-title">{block.title}</div> : null}
+              <p className="guidance-summary-text">{block.text}</p>
+            </div>
+          );
+        }
+
+        if (block.type === "key_facts") {
+          return (
+            <div key={key} className="guidance-card">
+              <div className="guidance-title">{block.title}</div>
+              <div className="guidance-facts-grid">
+                {block.items.map((item, itemIndex) => (
+                  <div key={`${item.label}-${itemIndex}`} className="guidance-fact">
+                    <span className="guidance-fact-label">{item.label}</span>
+                    <span className="guidance-fact-value">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
+        if (block.type === "documents" || block.type === "next_steps") {
+          return (
+            <div key={key} className="guidance-card">
+              <div className="guidance-title">{block.title}</div>
+              <ul className={`guidance-list guidance-list-${block.type}`}>
+                {block.items.map((item, itemIndex) => (
+                  <li key={`${item}-${itemIndex}`}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        }
+
+        if (block.type === "contact_card") {
+          return (
+            <div key={key} className="contact-card guidance-contact-card">
+              <div className="contact-card-title">{block.title}</div>
+              <div className="contact-card-items">
+                {block.contacts.map((contact, contactIndex) => {
+                  const safeHref = getSafeHref(contact.href, {
+                    allowMailto: true,
+                    allowTel: true,
+                  });
+
+                  return (
+                    <div
+                      key={`${contact.value}-${contactIndex}`}
+                      className="contact-card-item"
+                    >
+                      {safeHref ? (
+                        <a
+                          href={safeHref}
+                          className="contact-card-item-link"
+                          target={safeHref.startsWith("http") ? "_blank" : undefined}
+                          rel={safeHref.startsWith("http") ? "noopener noreferrer" : undefined}
+                        >
+                          <span className="contact-card-icon">
+                            {safeHref.startsWith("mailto:")
+                              ? "\u2709\uFE0F"
+                              : safeHref.startsWith("tel:")
+                              ? "\u{1F4DE}"
+                              : "\u{1F517}"}
+                          </span>
+                          <span className="guidance-contact-copy">
+                            <strong>{contact.label}</strong>
+                            <span>{contact.value}</span>
+                          </span>
+                        </a>
+                      ) : (
+                        <>
+                          <span className="contact-card-icon">\u23F0</span>
+                          <span className="guidance-contact-copy">
+                            <strong>{contact.label}</strong>
+                            <span>{contact.value}</span>
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        }
+
+        if (block.type === "verification_note") {
+          return (
+            <div key={key} className={`guidance-card guidance-note ${block.tone ? `guidance-note-${block.tone}` : ""}`}>
+              <div className="guidance-title">{block.title}</div>
+              <ul className="guidance-list">
+                {block.items.map((item, itemIndex) => (
+                  <li key={`${item}-${itemIndex}`}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        }
+
+        if (block.type === "center_card") {
+          const safeDirectionsHref = getSafeHref(block.directionsHref);
+          const safeSourceHref = getSafeHref(block.sourceHref);
+
+          return (
+            <div key={key} className="guidance-card guidance-center-card">
+              <div className="guidance-center-top">
+                <div className="guidance-center-copy">
+                  <div className="guidance-center-name-row">
+                    <span className="guidance-center-name">{block.name}</span>
+                  </div>
+                  {block.meta ? <span className="guidance-center-meta">{block.meta}</span> : null}
+                  <span className="guidance-center-location">
+                    {block.city}
+                    {block.area ? ` • ${block.area}` : ""}
+                  </span>
+                  <span className="guidance-center-address">{block.address}</span>
+                  <span className="guidance-center-hours">{block.hours}</span>
+                  <span className="guidance-center-phone">{block.phone}</span>
+                </div>
+              </div>
+              <div className="guidance-center-actions">
+                {block.callHref ? (
+                  <a href={block.callHref} className="guidance-center-action">
+                    {language === "ka" ? "დარეკვა" : "Call"}
+                  </a>
+                ) : null}
+                {safeDirectionsHref ? (
+                  <a
+                    href={safeDirectionsHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="guidance-center-action guidance-center-action-primary"
+                  >
+                    {language === "ka" ? "მიმართულება" : "Directions"}
+                  </a>
+                ) : null}
+                {safeSourceHref ? (
+                  <a
+                    href={safeSourceHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="guidance-center-action"
+                  >
+                    {language === "ka" ? "წყარო" : "Source"}
+                  </a>
+                ) : null}
+              </div>
+            </div>
+          );
+        }
+
+        if (block.type === "handoff_summary") {
+          return (
+            <div key={key} className="guidance-card guidance-handoff">
+              <div className="guidance-card-header">
+                <div className="guidance-title">{block.title}</div>
+                <button
+                  type="button"
+                  className="guidance-copy-btn"
+                  onClick={() => handleCopy(block.copyText, key)}
+                >
+                  {copiedKey === key ? block.copiedLabel : block.copyLabel}
+                </button>
+              </div>
+              <p className="guidance-handoff-summary">{block.summary}</p>
+              <div className="guidance-handoff-fields">
+                {block.fields.map((field, fieldIndex) => (
+                  <div key={`${field.label}-${fieldIndex}`} className="guidance-handoff-field">
+                    <span className="guidance-handoff-label">{field.label}</span>
+                    <span className="guidance-handoff-value">{field.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
+        if (block.type === "sources") {
+          return (
+            <div key={key} className="guidance-card">
+              <div className="guidance-title">{block.title}</div>
+              <div className="guidance-sources">
+                {block.items.map((item, itemIndex) => {
+                  const safeHref = getSafeHref(item.href);
+                  if (!safeHref) return null;
+
+                  return (
+                    <a
+                      key={`${item.label}-${itemIndex}`}
+                      href={safeHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="guidance-source-item"
+                    >
+                      <span className="guidance-source-label">{item.label}</span>
+                      <span className="guidance-source-detail">{item.detail}</span>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        }
+
+        if (block.type === "follow_up_chips") {
+          return (
+            <div key={key} className="guidance-follow-ups">
+              {block.items.map((item) => (
+                <button
+                  key={item.prompt}
+                  className="suggested-reply-chip"
+                  onClick={() => onQuickReply(item.prompt)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          );
+        }
+
+        return null;
+      })}
+    </div>
+  );
+}
+
 function ContactCard({ text }) {
   const ph = text.match(/\+995\s*\(?\d{2,3}\)?\s*\d{3}\s*\d{2}\s*\d{2}/);
   const em = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
@@ -227,9 +587,10 @@ function ContactCard({ text }) {
 /* ── App ── */
 function App() {
   const [view, setView] = useState("home"); // home | chat
-  const [lang, setLang] = useState("en");
+  const [lang, setLang] = useState("ka");
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   // Chat state
   const [messages, setMessages] = useState([]);
@@ -246,6 +607,26 @@ function App() {
 
   const t = T[lang] || T.en;
   const currentLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
+  const settleMessages = useCallback((items) => {
+    const last = items[items.length - 1];
+    if (last?.role === "ai-stream") {
+      return [...items.slice(0, -1), { ...last, role: "ai" }];
+    }
+    return items;
+  }, []);
+
+  const cancelPendingResponse = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    if (flushTimerRef.current) {
+      clearTimeout(flushTimerRef.current);
+      flushTimerRef.current = null;
+    }
+    pendingChunksRef.current = [];
+    setIsThinking(false);
+  }, []);
 
   useEffect(() => { if (!langMenuOpen) return; const h = () => setLangMenuOpen(false); document.addEventListener("click", h); return () => document.removeEventListener("click", h); }, [langMenuOpen]);
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isThinking]);
@@ -297,6 +678,8 @@ function App() {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let finalBlocks = [];
+      let finalJourney = null;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -332,14 +715,18 @@ function App() {
                 });
               }
             } else if (data.type === "message_stop") {
+              finalBlocks = Array.isArray(data.blocks) ? data.blocks : [];
+              finalJourney = data.journey || null;
               if (flushTimerRef.current) { clearTimeout(flushTimerRef.current); flushTimerRef.current = null; }
               const buffered = pendingChunksRef.current.join("");
               pendingChunksRef.current = [];
               setIsThinking(false);
               setMessages(p => {
                 const last = p[p.length - 1];
-                if (last?.role === "ai-stream") return [...p.slice(0, -1), { role: "ai", text: last.text, ts: last.ts }];
-                if (buffered) return [...p, { role: "ai", text: buffered, ts: Date.now() }];
+                if (last?.role === "ai-stream") {
+                  return [...p.slice(0, -1), { role: "ai", text: last.text, ts: last.ts, blocks: finalBlocks, journey: finalJourney }];
+                }
+                if (buffered) return [...p, { role: "ai", text: buffered, ts: Date.now(), blocks: finalBlocks, journey: finalJourney }];
                 return p;
               });
             }
@@ -355,9 +742,9 @@ function App() {
       setMessages(p => {
         const last = p[p.length - 1];
         if (last?.role === "ai-stream") {
-          return [...p.slice(0, -1), { role: "ai", text: last.text + leftover, ts: last.ts }];
+          return [...p.slice(0, -1), { role: "ai", text: last.text + leftover, ts: last.ts, blocks: finalBlocks, journey: finalJourney }];
         }
-        if (leftover) return [...p, { role: "ai", text: leftover, ts: Date.now() }];
+        if (leftover) return [...p, { role: "ai", text: leftover, ts: Date.now(), blocks: finalBlocks, journey: finalJourney }];
         return p;
       });
     } catch (err) {
@@ -377,6 +764,8 @@ function App() {
             : "Sorry, something went wrong. Please try again.",
           ts: Date.now(),
           error: true,
+          blocks: [],
+          journey: null,
         }];
       });
     }
@@ -388,13 +777,24 @@ function App() {
     setInputText("");
     if (inputRef.current) inputRef.current.style.height = "auto";
     const userMsg = { role: "user", text: txt, ts: Date.now() };
-    const last = messages[messages.length - 1];
-    const updated = last?.role === "ai-stream"
-      ? [...messages.slice(0, -1), { ...last, role: "ai" }, userMsg]
-      : [...messages, userMsg];
+    const baseMessages = settleMessages(messages);
+    const localReply = getCenterLookupReply({
+      text: txt,
+      language: lang,
+      selectedServiceId: selectedService?.id,
+      messages: baseMessages,
+    });
+
+    if (localReply) {
+      cancelPendingResponse();
+      setMessages([...baseMessages, userMsg, { ...localReply, ts: Date.now() }]);
+      return;
+    }
+
+    const updated = [...baseMessages, userMsg];
     setMessages(updated);
     sendToAPI(updated);
-  }, [inputText, status, messages, sendToAPI]);
+  }, [inputText, status, messages, settleMessages, lang, selectedService, cancelPendingResponse, sendToAPI]);
 
   const handleKeyDown = useCallback((e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }, [sendMessage]);
 
@@ -409,27 +809,39 @@ function App() {
   const handleQuickReply = useCallback((text) => {
     if (status !== "connected") return;
     const userMsg = { role: "user", text, ts: Date.now() };
-    const last = messages[messages.length - 1];
-    const updated = last?.role === "ai-stream"
-      ? [...messages.slice(0, -1), { ...last, role: "ai" }, userMsg]
-      : [...messages, userMsg];
+    const baseMessages = settleMessages(messages);
+    const localReply = getCenterLookupReply({
+      text,
+      language: lang,
+      selectedServiceId: selectedService?.id,
+      messages: baseMessages,
+    });
+
+    if (localReply) {
+      cancelPendingResponse();
+      setMessages([...baseMessages, userMsg, { ...localReply, ts: Date.now() }]);
+      return;
+    }
+
+    const updated = [...baseMessages, userMsg];
     setMessages(updated);
     sendToAPI(updated);
-  }, [status, messages, sendToAPI]);
+  }, [status, messages, settleMessages, lang, selectedService, cancelPendingResponse, sendToAPI]);
 
   /* Contextual suggested replies */
   const suggestedReplies = useMemo(() => {
     if (isThinking) return [];
     const lastMsg = messages[messages.length - 1];
     if (!lastMsg || lastMsg.role === "user" || lastMsg.role === "ai-stream") return [];
+    if (Array.isArray(lastMsg.blocks) && lastMsg.blocks.some(block => block.type === "follow_up_chips")) return [];
     const txt = (lastMsg.text || "").toLowerCase();
     const userCount = messages.filter(m => m.role === "user").length;
     const isKa = lang === "ka";
 
     if (userCount === 0) {
       return isKa
-        ? ["\u10E1\u10D0\u10D5\u10D0\u10DA\u10D3\u10D4\u10D1\u10E3\u10DA\u10DD \u10E1\u10D0\u10DB\u10E1\u10D0\u10EE\u10E3\u10E0\u10D8", "\u10D2\u10D0\u10D3\u10D0\u10D5\u10D0\u10D3\u10D4\u10D1\u10D0", "\u10E1\u10D0\u10D9\u10DD\u10DC\u10E2\u10E0\u10D0\u10E5\u10E2\u10DD \u10E1\u10D0\u10DB\u10E1\u10D0\u10EE\u10E3\u10E0\u10D8", "\u10EE\u10E8\u10D8\u10E0\u10D0\u10D3 \u10D3\u10D0\u10E1\u10DB\u10E3\u10DA\u10D8 \u10D9\u10D8\u10D7\u10EE\u10D5\u10D4\u10D1\u10D8"]
-        : ["Mandatory Service", "Deferrals", "Professional Service", "FAQ"];
+        ? ["\u10E1\u10D0\u10D5\u10D0\u10DA\u10D3\u10D4\u10D1\u10E3\u10DA\u10DD \u10E1\u10D0\u10DB\u10E1\u10D0\u10EE\u10E3\u10E0\u10D8", "\u10D2\u10D0\u10D3\u10D0\u10D5\u10D0\u10D3\u10D4\u10D1\u10D0", "\u10E1\u10D0\u10D9\u10DD\u10DC\u10E2\u10E0\u10D0\u10E5\u10E2\u10DD \u10E1\u10D0\u10DB\u10E1\u10D0\u10EE\u10E3\u10E0\u10D8", "\u10D8\u10DE\u10DD\u10D5\u10D4 \u10E9\u10D4\u10DB\u10D8 \u10EA\u10D4\u10DC\u10E2\u10E0\u10D8"]
+        : ["Mandatory Service", "Deferrals", "Professional Service", "Find My Center"];
     }
 
     if (txt.includes("gel") || txt.includes("\u10DA\u10D0\u10E0") || txt.includes("months") || txt.includes("\u10D7\u10D5\u10D4")) {
@@ -452,9 +864,10 @@ function App() {
     setLang(code);
     setLangMenuOpen(false);
     if (view === "chat") {
-      if (abortControllerRef.current) abortControllerRef.current.abort();
-      setIsThinking(false);
-      if (selectedService) {
+      cancelPendingResponse();
+      if (selectedService?.id === "center") {
+        setMessages(buildCenterLookupConversation(code));
+      } else if (selectedService) {
         const svcMsg = getServiceSeedPrompt(selectedService.id, code);
         const newMsgs = [{ role: "user", text: svcMsg, ts: Date.now() }];
         setMessages(newMsgs);
@@ -467,9 +880,13 @@ function App() {
   };
 
   const openServiceChat = (service) => {
-    if (abortControllerRef.current) abortControllerRef.current.abort();
+    cancelPendingResponse();
     setSelectedService(service);
     setView("chat"); setIsThinking(false); setStatus("connected");
+    if (service.id === "center") {
+      setMessages(buildCenterLookupConversation(lang));
+      return;
+    }
     const svcMsg = getServiceSeedPrompt(service.id, lang);
     const initialMsgs = [{ role: "user", text: svcMsg, ts: Date.now() }];
     setMessages(initialMsgs);
@@ -539,7 +956,7 @@ function App() {
 
       {/* Widget */}
       <div className={`widget-host ${isOpen ? "widget-open" : ""}`}>
-        <div className={`panel ${isOpen ? "open" : ""}`}>
+        <div className={`panel ${isOpen ? "open" : ""} ${isExpanded ? "panel-expanded" : ""}`}>
           {/* Header */}
           <div className="panel-header">
             <div className="panel-header-left">
@@ -555,6 +972,28 @@ function App() {
                 <button className="lang-trigger-btn" onClick={(e) => { e.stopPropagation(); setLangMenuOpen(v => !v); }}><span className="lang-flag"><currentLang.Flag /></span><span className="lang-code">{currentLang.displayCode}</span></button>
                 {langMenuOpen && <div className="lang-menu">{LANGUAGES.map(l => <button key={l.code} className={`lang-option ${l.code === lang ? "active" : ""}`} onClick={() => handleLangChange(l.code)}><span className="lang-flag"><l.Flag /></span><span className="lang-label">{l.label}</span></button>)}</div>}
               </div>
+              <button
+                className={`header-action-btn header-expand-btn ${isExpanded ? "active" : ""}`}
+                onClick={() => setIsExpanded(v => !v)}
+                aria-label={isExpanded ? (lang === "ka" ? "შემცირება" : "Collapse widget") : (lang === "ka" ? "გაფართოება" : "Expand widget")}
+                title={isExpanded ? (lang === "ka" ? "შემცირება" : "Collapse widget") : (lang === "ka" ? "გაფართოება" : "Expand widget")}
+              >
+                {isExpanded ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="14 10 14 5 19 5" />
+                    <line x1="14" y1="10" x2="20" y2="4" />
+                    <polyline points="10 14 10 19 5 19" />
+                    <line x1="10" y1="14" x2="4" y2="20" />
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="14" y1="10" x2="21" y2="3" />
+                    <polyline points="9 21 3 21 3 15" />
+                    <line x1="10" y1="14" x2="3" y2="21" />
+                  </svg>
+                )}
+              </button>
               <button className="header-action-btn" onClick={() => setIsOpen(false)}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
             </div>
           </div>
@@ -589,7 +1028,20 @@ function App() {
                 {messages.map((msg, i) => (
                   <div key={i} className={`msg ${msg.role === "user" ? "msg-user" : "msg-agent"}`}>
                     <div className="msg-content">
-                      {msg.role === "user" ? msg.text : <><RichText text={msg.role === "ai" ? msg.text.replace(/\+995\s*\(?\d{2,3}\)?\s*\d{3}\s*\d{2}\s*\d{2}/g, "") : msg.text} />{msg.role === "ai-stream" && <span className="stream-cursor" />}{msg.role === "ai" && <ContactCard text={msg.text} />}</>}
+                      {msg.role === "user" ? msg.text : (
+                        <>
+                          {(msg.role !== "ai" || getRenderableAssistantText(msg)) && (
+                            <RichText text={msg.role === "ai" ? getRenderableAssistantText(msg) : msg.text} />
+                          )}
+                          {msg.role === "ai-stream" && <span className="stream-cursor" />}
+                          {msg.role === "ai" && Array.isArray(msg.blocks) && msg.blocks.length > 0 && (
+                            <GuidanceBlocks blocks={msg.blocks} onQuickReply={handleQuickReply} language={lang} />
+                          )}
+                          {msg.role === "ai" && (!Array.isArray(msg.blocks) || !msg.blocks.some(block => block.type === "contact_card")) && (
+                            <ContactCard text={msg.text} />
+                          )}
+                        </>
+                      )}
                     </div>
                     {msg.role !== "ai-stream" && msg.ts && <span className={`msg-time ${msg.role === "user" ? "msg-time-right" : ""}`}>{formatTime(msg.ts)}</span>}
                   </div>

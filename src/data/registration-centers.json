@@ -1,0 +1,928 @@
+{
+  "researched_at": "2026-03-06",
+  "research_status": "initial_registry",
+  "methodology": [
+    "Primary official source confirmed only the Ministry HQ address and general hotline.",
+    "Branch-level military registration center addresses were compiled from 08.ge military office directory pages.",
+    "Batumi and Kobuleti were additionally cross-checked against 2GIS listings.",
+    "Entries sourced from 08.ge or 2GIS should be treated as provisional until the MOD or the national conscription agency publishes an official branch directory."
+  ],
+  "global_contact": {
+    "organization_ka": "საქართველოს თავდაცვის სამინისტრო",
+    "organization_en": "Ministry of Defense of Georgia",
+    "official_website": "https://mod.gov.ge",
+    "official_address_ka": "თბილისი, გენერალ გ. კვინიტაძის ქ. 20",
+    "official_address_en": "20 General G. Kvinitadze St., 0112 Tbilisi, Georgia",
+    "official_phone": "+995 32 2 72 10 00",
+    "official_email": "info@mod.gov.ge",
+    "source_urls": [
+      "https://mod.gov.ge",
+      "https://mod.gov.ge/uploads/public/_%25E1%2583%2598%25E1%2583%259C%25E1%2583%25A2%25E1%2583%2594%25E1%2583%25A0%25E1%2583%2594%25E1%2583%25A1%25E1%2583%2598%25E1%2583%25A1_%25E1%2583%2590%25E1%2583%25A5%25E1%2583%25A2%25E1%2583%2594%25E1%2583%2591%25E1%2583%2598/469.pdf"
+    ]
+  },
+  "centers": [
+    {
+      "id": "tbilisi-regional-center",
+      "center_type": "regional_center",
+      "region": "თბილისი და მცხეთა-მთიანეთი",
+      "city": "თბილისი",
+      "district_or_municipality": "დიდუბე",
+      "name_ka": "თბილისისა და მცხეთა-მთიანეთის რეგიონული ცენტრი",
+      "address_ka": "თბილისი, სპირიდონ კედიას ქ. 7",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335691/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%A0%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%91%E1%83%A3%E1%83%A0%E1%83%97%E1%83%90%E1%83%9A%E1%83%9D%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Regional center address was visible as a related office on district office pages."
+    },
+    {
+      "id": "tbilisi-mtatsminda",
+      "center_type": "district_branch",
+      "region": "თბილისი და მცხეთა-მთიანეთი",
+      "city": "თბილისი",
+      "district_or_municipality": "მთაწმინდა",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების მთაწმინდის რაიონის განყოფილება",
+      "address_ka": "თბილისი, ძმები ზუბალაშვილების ქ. 20",
+      "postal_code": "0108",
+      "local_phone": "+995511542165",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335682/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%A0%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%97%E1%83%90%E1%83%AC%E1%83%9B%E1%83%98%E1%83%9C%E1%83%93%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct district page on 08.ge."
+    },
+    {
+      "id": "tbilisi-isani",
+      "center_type": "district_branch",
+      "region": "თბილისი და მცხეთა-მთიანეთი",
+      "city": "თბილისი",
+      "district_or_municipality": "ისანი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების ისნის რაიონის განყოფილება",
+      "address_ka": "თბილისი, ნავთლუღის ქ. 8/1",
+      "postal_code": "0113",
+      "local_phone": "+995511542166",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335683/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%A0%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%98%E1%83%A1%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct district page on 08.ge."
+    },
+    {
+      "id": "tbilisi-didube",
+      "center_type": "district_branch",
+      "region": "თბილისი და მცხეთა-მთიანეთი",
+      "city": "თბილისი",
+      "district_or_municipality": "დიდუბე",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების დიდუბის რაიონის განყოფილება",
+      "address_ka": "თბილისი, დიღმის მასივი, აკაკი ბელიაშვილის ქ. 1",
+      "postal_code": "0159",
+      "local_phone": "+995511542168",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335684/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%A0%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%98%E1%83%93%E1%83%A3%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct district page on 08.ge."
+    },
+    {
+      "id": "tbilisi-chughureti",
+      "center_type": "district_branch",
+      "region": "თბილისი და მცხეთა-მთიანეთი",
+      "city": "თბილისი",
+      "district_or_municipality": "ჩუღურეთი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების ჩუღურეთის რაიონის განყოფილება",
+      "address_ka": "თბილისი, დიღმის მასივი, აკაკი ბელიაშვილის ქ. 43ბ",
+      "postal_code": "0159",
+      "local_phone": "+995511542169",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335687/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%A0%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A9%E1%83%A3%E1%83%A6%E1%83%A3%E1%83%A0%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct district page on 08.ge."
+    },
+    {
+      "id": "tbilisi-saburtalo",
+      "center_type": "district_branch",
+      "region": "თბილისი და მცხეთა-მთიანეთი",
+      "city": "თბილისი",
+      "district_or_municipality": "საბურთალო",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების საბურთალოს რაიონის განყოფილება",
+      "address_ka": "თბილისი, ადამის მიცკევიჩის ქ. 29",
+      "postal_code": "0194",
+      "local_phone": "+995511542163",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335691/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%91%E1%83%A3%E1%83%A0%E1%83%97%E1%83%90%E1%83%9A%E1%83%9D%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct district page on 08.ge."
+    },
+    {
+      "id": "tbilisi-samgori",
+      "center_type": "district_branch",
+      "region": "თბილისი და მცხეთა-მთიანეთი",
+      "city": "თბილისი",
+      "district_or_municipality": "სამგორი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების სამგორის რაიონის განყოფილება",
+      "address_ka": "თბილისი, მოსკოვის გამზ. 14",
+      "postal_code": "0137",
+      "local_phone": "+995511542162",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335686/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%92%E1%83%9D%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct district page on 08.ge."
+    },
+    {
+      "id": "tbilisi-krtsanisi",
+      "center_type": "district_branch",
+      "region": "თბილისი და მცხეთა-მთიანეთი",
+      "city": "თბილისი",
+      "district_or_municipality": "კრწანისი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების კრწანისის რაიონის განყოფილება",
+      "address_ka": "თბილისი, გიორგის გურამიშვილის ქ. 6",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335682/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%97%E1%83%90%E1%83%AC%E1%83%9B%E1%83%98%E1%83%9C%E1%83%93%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90",
+        "https://www.08.ge/organizations/view/335686/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%92%E1%83%9D%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%98%E1%83%9D%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Address appeared as a cross-linked district office on multiple 08.ge district pages; direct page could not be retrieved."
+    },
+    {
+      "id": "imereti-rchkvs-regional-center",
+      "center_type": "regional_center",
+      "region": "იმერეთი, რაჭა-ლეჩხუმი და ქვემო სვანეთი",
+      "city": "ქუთაისი",
+      "district_or_municipality": null,
+      "name_ka": "იმერეთის რაჭა-ლეჩხუმის და ქვემო სვანეთის რეგიონული ცენტრი",
+      "address_ka": "ქუთაისი, ახალგაზრდობის გამზ. 1-ლი შეს. 1",
+      "postal_code": "4600",
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335746/%E1%83%98%E1%83%9B%E1%83%94%E1%83%A0%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%AD%E1%83%90-%E1%83%9A%E1%83%94%E1%83%A9%E1%83%AE%E1%83%A3%E1%83%9B%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A1%E1%83%95%E1%83%90%E1%83%9C%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Regional center page on 08.ge."
+    },
+    {
+      "id": "kutaisi-municipal",
+      "center_type": "municipal_branch",
+      "region": "იმერეთი",
+      "city": "ქუთაისი",
+      "district_or_municipality": "ქუთაისი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ქუთაისის მუნიციპალური განყოფილება",
+      "address_ka": "ქუთაისი, შოთა რუსთაველის გამზ. 1",
+      "postal_code": "4600",
+      "local_phone": "+995511542219",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335747/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A5%E1%83%A3%E1%83%97%E1%83%90%E1%83%98%E1%83%A1%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "khoni-municipal",
+      "center_type": "municipal_branch",
+      "region": "იმერეთი",
+      "city": "ხონი",
+      "district_or_municipality": "ხონი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ხონის მუნიციპალური განყოფილება",
+      "address_ka": "ხონი, პოლიკარპე კაკაბაძის ქ. 17",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335746/%E1%83%98%E1%83%9B%E1%83%94%E1%83%A0%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%AD%E1%83%90-%E1%83%9A%E1%83%94%E1%83%A9%E1%83%AE%E1%83%A3%E1%83%9B%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A1%E1%83%95%E1%83%90%E1%83%9C%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the regional center page."
+    },
+    {
+      "id": "tskaltubo-municipal",
+      "center_type": "municipal_branch",
+      "region": "იმერეთი",
+      "city": "წყალტუბო",
+      "district_or_municipality": "წყალტუბო",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების წყალტუბოს მუნიციპალური განყოფილება",
+      "address_ka": "წყალტუბო, შოთა რუსთაველის ქ. 25",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335746/%E1%83%98%E1%83%9B%E1%83%94%E1%83%A0%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%AD%E1%83%90-%E1%83%9A%E1%83%94%E1%83%A9%E1%83%AE%E1%83%A3%E1%83%9B%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A1%E1%83%95%E1%83%90%E1%83%9C%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the regional center page."
+    },
+    {
+      "id": "vani-municipal",
+      "center_type": "municipal_branch",
+      "region": "იმერეთი",
+      "city": "ვანი",
+      "district_or_municipality": "ვანი",
+      "name_ka": "სამხედრო აღრიცხვის, გაწვევისა და რეკრუტირების ვანის მუნიციპალური განყოფილება",
+      "address_ka": "ვანი, თავისუფლების ქ. 9",
+      "postal_code": "1900",
+      "local_phone": "+995511542213",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335750/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%2C%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%E1%83%90%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%95%E1%83%90%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "baghdati-municipal",
+      "center_type": "municipal_branch",
+      "region": "იმერეთი",
+      "city": "ბაღდათი",
+      "district_or_municipality": "ბაღდათი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ბაღდათის მუნიციპალური განყოფილება",
+      "address_ka": "ბაღდათი, აკაკი წერეთლის ქ. 9",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335746/%E1%83%98%E1%83%9B%E1%83%94%E1%83%A0%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%AD%E1%83%90-%E1%83%9A%E1%83%94%E1%83%A9%E1%83%AE%E1%83%A3%E1%83%9B%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A1%E1%83%95%E1%83%90%E1%83%9C%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the regional center page."
+    },
+    {
+      "id": "tkibuli-municipal",
+      "center_type": "municipal_branch",
+      "region": "იმერეთი",
+      "city": "ტყიბული",
+      "district_or_municipality": "ტყიბული",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ტყიბულის მუნიციპალური განყოფილება",
+      "address_ka": "ტყიბული, მამუკა ახობაძის ქ. 12",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335746/%E1%83%98%E1%83%9B%E1%83%94%E1%83%A0%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%90%E1%83%AD%E1%83%90-%E1%83%9A%E1%83%94%E1%83%A9%E1%83%AE%E1%83%A3%E1%83%9B%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A1%E1%83%95%E1%83%90%E1%83%9C%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the regional center page."
+    },
+    {
+      "id": "samtredia-municipal",
+      "center_type": "municipal_branch",
+      "region": "იმერეთი",
+      "city": "სამტრედია",
+      "district_or_municipality": "სამტრედია",
+      "name_ka": "სამხედრო აღრიცხვის, გაწვევისა და რეკრუტირების სამტრედიის მუნიციპალური განყოფილება",
+      "address_ka": "სამტრედია, ცხრა აპრილის ქ. 4",
+      "postal_code": "3900",
+      "local_phone": "+995511542216",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335762/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%2C%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%E1%83%90%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%A2%E1%83%A0%E1%83%94%E1%83%93%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "ajara-regional-center",
+      "center_type": "regional_center",
+      "region": "აჭარის ავტონომიური რესპუბლიკა",
+      "city": "ბათუმი",
+      "district_or_municipality": null,
+      "name_ka": "აჭარის ავტონომიური რესპუბლიკის რეგიონული ცენტრი",
+      "address_ka": "ბათუმი, ადლიის ქ. 76",
+      "postal_code": "6000",
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335779/%E1%83%90%E1%83%AD%E1%83%90%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%90%E1%83%95%E1%83%A2%E1%83%9D%E1%83%9C%E1%83%9D%E1%83%9B%E1%83%98%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%A0%E1%83%94%E1%83%A1%E1%83%9E%E1%83%A3%E1%83%91%E1%83%9A%E1%83%98%E1%83%99%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Regional center page on 08.ge."
+    },
+    {
+      "id": "batumi-city",
+      "center_type": "municipal_branch",
+      "region": "აჭარა",
+      "city": "ბათუმი",
+      "district_or_municipality": "ბათუმი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ქალაქ ბათუმის განყოფილება",
+      "address_ka": "ბათუმი, ოცდაექვსი მაისის ქ. 45",
+      "postal_code": "6000",
+      "local_phone": "+995511542242",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "cross_checked_third_party",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335781/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%A5%E1%83%90%E1%83%9A%E1%83%90%E1%83%A5%20%E1%83%91%E1%83%90%E1%83%97%E1%83%A3%E1%83%9B%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90",
+        "https://2gis.ge/batumi/firm/70000001099896436"
+      ],
+      "notes": "Cross-checked between 08.ge and 2GIS."
+    },
+    {
+      "id": "kobuleti-municipal",
+      "center_type": "municipal_branch",
+      "region": "აჭარა",
+      "city": "ქობულეთი",
+      "district_or_municipality": "ქობულეთი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ქობულეთის მუნიციპალური განყოფილება",
+      "address_ka": "ქობულეთი, შოთა რუსთაველის ქ. 140გ",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://onlinebct.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, შესვენება 13:00-14:00",
+      "verification_status": "cross_checked_third_party",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335779/%E1%83%90%E1%83%AD%E1%83%90%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%90%E1%83%95%E1%83%A2%E1%83%9D%E1%83%9C%E1%83%9D%E1%83%9B%E1%83%98%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%A0%E1%83%94%E1%83%A1%E1%83%9E%E1%83%A3%E1%83%91%E1%83%9A%E1%83%98%E1%83%99%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98",
+        "https://2gis.ge/batumi/firm/70000001096197259"
+      ],
+      "notes": "Street address matched between 08.ge subsidiary listing and 2GIS."
+    },
+    {
+      "id": "khelvachauri-municipal",
+      "center_type": "municipal_branch",
+      "region": "აჭარა",
+      "city": "ბათუმი",
+      "district_or_municipality": "ხელვაჩაური",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ხელვაჩაურის მუნიციპალური განყოფილება",
+      "address_ka": "ბათუმი, დიდაჭარის ქ. 23",
+      "postal_code": null,
+      "local_phone": "+995511542248",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335782/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%AE%E1%83%94%E1%83%9A%E1%83%95%E1%83%90%E1%83%A9%E1%83%90%E1%83%A3%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "keda-municipal",
+      "center_type": "municipal_branch",
+      "region": "აჭარა",
+      "city": "ქედა",
+      "district_or_municipality": "ქედა",
+      "name_ka": "სამხედრო აღრიცხვის, გაწვევისა და რეკრუტირების ქედის მუნიციპალური განყოფილება",
+      "address_ka": "ქედა, ოცდაექვსი მაისის ქ. 2",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335779/%E1%83%90%E1%83%AD%E1%83%90%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%90%E1%83%95%E1%83%A2%E1%83%9D%E1%83%9C%E1%83%9D%E1%83%9B%E1%83%98%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%A0%E1%83%94%E1%83%A1%E1%83%9E%E1%83%A3%E1%83%91%E1%83%9A%E1%83%98%E1%83%99%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Ajara regional center page."
+    },
+    {
+      "id": "shuakhevi-municipal",
+      "center_type": "municipal_branch",
+      "region": "აჭარა",
+      "city": "შუახევი",
+      "district_or_municipality": "შუახევი",
+      "name_ka": "სამხედრო აღრიცხვის, გაწვევისა და რეკრუტირების შუახევის მუნიციპალური განყოფილება",
+      "address_ka": "შუახევი, სოლომონ ხიმშიაშვილის ქ. 2",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335779/%E1%83%90%E1%83%AD%E1%83%90%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%90%E1%83%95%E1%83%A2%E1%83%9D%E1%83%9C%E1%83%9D%E1%83%9B%E1%83%98%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%A0%E1%83%94%E1%83%A1%E1%83%9E%E1%83%A3%E1%83%91%E1%83%9A%E1%83%98%E1%83%99%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Ajara regional center page."
+    },
+    {
+      "id": "kakheti-regional-center",
+      "center_type": "regional_center",
+      "region": "კახეთი",
+      "city": "თელავი",
+      "district_or_municipality": null,
+      "name_ka": "კახეთის რეგიონული ცენტრი",
+      "address_ka": "თელავი, თამარის ქ. 36",
+      "postal_code": "2200",
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335697/%E1%83%99%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Regional center page on 08.ge."
+    },
+    {
+      "id": "telavi-municipal",
+      "center_type": "municipal_branch",
+      "region": "კახეთი",
+      "city": "თელავი",
+      "district_or_municipality": "თელავი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების თელავის მუნიციპალური განყოფილება",
+      "address_ka": "თელავი, ერეკლე მეორის გამზ. 6",
+      "postal_code": "2200",
+      "local_phone": "+995511542182",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335698/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%97%E1%83%94%E1%83%9A%E1%83%90%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "akhmeta-municipal",
+      "center_type": "municipal_branch",
+      "region": "კახეთი",
+      "city": "ახმეტა",
+      "district_or_municipality": "ახმეტა",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების ახმეტის მუნიციპალური განყოფილება",
+      "address_ka": "ახმეტა, შოთა რუსთაველის ქ. 40",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335697/%E1%83%99%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kakheti regional center page."
+    },
+    {
+      "id": "gurjaani-municipal",
+      "center_type": "municipal_branch",
+      "region": "კახეთი",
+      "city": "გურჯაანი",
+      "district_or_municipality": "გურჯაანი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების გურჯაანის მუნიციპალური განყოფილება",
+      "address_ka": "გურჯაანი, მერაბ კოსტავას ქ. 26",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335697/%E1%83%99%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kakheti regional center page."
+    },
+    {
+      "id": "kvareli-municipal",
+      "center_type": "municipal_branch",
+      "region": "კახეთი",
+      "city": "ყვარელი",
+      "district_or_municipality": "ყვარელი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების ყვარლის მუნიციპალური განყოფილება",
+      "address_ka": "ყვარელი, ილია ჭავჭავაძის ქ. 71",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335697/%E1%83%99%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kakheti regional center page."
+    },
+    {
+      "id": "sighnaghi-municipal",
+      "center_type": "municipal_branch",
+      "region": "კახეთი",
+      "city": "წნორი",
+      "district_or_municipality": "სიღნაღი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების სიღნაღის მუნიციპალური განყოფილება",
+      "address_ka": "წნორი, იროდიონ ევდოშვილის ქ. 26",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335697/%E1%83%99%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Regional page lists the Sighnaghi branch in Tsnori."
+    },
+    {
+      "id": "sagarejo-municipal",
+      "center_type": "municipal_branch",
+      "region": "კახეთი",
+      "city": "საგარეჯო",
+      "district_or_municipality": "საგარეჯო",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევის და რეკრუტირების საგარეჯოს მუნიციპალური განყოფილება",
+      "address_ka": "საგარეჯო, დავით აღმაშენებლის ქ. 15",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335697/%E1%83%99%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kakheti regional center page."
+    },
+    {
+      "id": "kvemo-kartli-regional-center",
+      "center_type": "regional_center",
+      "region": "ქვემო ქართლი",
+      "city": "გარდაბანი",
+      "district_or_municipality": "მთისძირი",
+      "name_ka": "ქვემო ქართლის რეგიონული ცენტრი",
+      "address_ka": "გარდაბანი, სოფ. მთისძირი, კრწანისის დასახლება",
+      "postal_code": "1315",
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335712/%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Regional center page on 08.ge."
+    },
+    {
+      "id": "rustavi-city",
+      "center_type": "municipal_branch",
+      "region": "ქვემო ქართლი",
+      "city": "რუსთავი",
+      "district_or_municipality": "რუსთავი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ქალაქ რუსთავის განყოფილება",
+      "address_ka": "რუსთავი, 11 მ/რ, კორპუსი 1",
+      "postal_code": "3700",
+      "local_phone": "+995511542188",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335715/%25E1%2583%25A1%25E1%2583%2590%25E1%2583%259B%25E1%2583%25AE%25E1%2583%2594%25E1%2583%2593%25E1%2583%25A0%25E1%2583%259D%2520%25E1%2583%25A6%25E1%2583%25A0%25E1%2583%2598%25E1%2583%25AA%25E1%2583%25AE%25E1%2583%2595%25E1%2583%2598%25E1%2583%25A1%2520%25E1%2583%2592%25E1%2583%2590%25E1%2583%25AC%25E1%2583%2595%25E1%2583%2594%25E1%2583%2595%25E1%2583%2598%25E1%2583%25A1%25E1%2583%2590%2520%25E1%2583%2593%25E1%2583%2590%2520%25E1%2583%25A0%25E1%2583%2594%25E1%2583%2599%25E1%2583%25A0%25E1%2583%25A3%25E1%2583%25A2%25E1%2583%2598%25E1%2583%25A0%25E1%2583%2594%25E1%2583%2591%25E1%2583%2598%25E1%2583%25A1%2520%25E1%2583%25A5%25E1%2583%2590%25E1%2583%259A%25E1%2583%2590%25E1%2583%25A5%2520%25E1%2583%25A0%25E1%2583%25A3%25E1%2583%25A1%25E1%2583%2597%25E1%2583%2590%25E1%2583%2595%25E1%2583%2598%25E1%2583%25A1%2520%25E1%2583%2592%25E1%2583%2590%25E1%2583%259C%25E1%2583%25A7%25E1%2583%259D%25E1%2583%25A4%25E1%2583%2598%25E1%2583%259A%25E1%2583%2594%25E1%2583%2591%25E1%2583%2590"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "gardabani-municipal",
+      "center_type": "municipal_branch",
+      "region": "ქვემო ქართლი",
+      "city": "გარდაბანი",
+      "district_or_municipality": "გარდაბანი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების გარდაბნის მუნიციპალური განყოფილება",
+      "address_ka": "გარდაბანი, დავით აღმაშენებლის ქ. 127",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335712/%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kvemo Kartli regional center page."
+    },
+    {
+      "id": "marneuli-municipal",
+      "center_type": "municipal_branch",
+      "region": "ქვემო ქართლი",
+      "city": "მარნეული",
+      "district_or_municipality": "მარნეული",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების მარნეულის მუნიციპალური განყოფილება",
+      "address_ka": "მარნეული, შოთა რუსთაველის ქ. 69",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335712/%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kvemo Kartli regional center page."
+    },
+    {
+      "id": "bolnisi-municipal",
+      "center_type": "municipal_branch",
+      "region": "ქვემო ქართლი",
+      "city": "ბოლნისი",
+      "district_or_municipality": "ბოლნისი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ბოლნისის მუნიციპალური განყოფილება",
+      "address_ka": "ბოლნისი, იაკობ გოგებაშვილის ქ. 26",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335712/%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kvemo Kartli regional center page."
+    },
+    {
+      "id": "dmanisi-municipal",
+      "center_type": "municipal_branch",
+      "region": "ქვემო ქართლი",
+      "city": "დმანისი",
+      "district_or_municipality": "დმანისი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების დმანისის მუნიციპალური განყოფილება",
+      "address_ka": "დმანისი, ცხრა აპრილის ქ. 9",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335712/%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kvemo Kartli regional center page."
+    },
+    {
+      "id": "tetritskaro-municipal",
+      "center_type": "municipal_branch",
+      "region": "ქვემო ქართლი",
+      "city": "თეთრიწყარო",
+      "district_or_municipality": "თეთრიწყარო",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების თეთრიწყაროს მუნიციპალური განყოფილება",
+      "address_ka": "თეთრიწყარო, მერაბ კოსტავას ქ. 9",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335712/%E1%83%A5%E1%83%95%E1%83%94%E1%83%9B%E1%83%9D%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Kvemo Kartli regional center page."
+    },
+    {
+      "id": "shida-kartli-regional-center",
+      "center_type": "regional_center",
+      "region": "შიდა ქართლი, სამაჩაბლო და სამცხე-ჯავახეთი",
+      "city": "გორი",
+      "district_or_municipality": null,
+      "name_ka": "შიდა ქართლის სამაჩაბლოს და სამცხე ჯავახეთი რეგიონული ცენტრი",
+      "address_ka": "გორი, ცხინვალის გზატკეცილი, მე-3 კმ, 48",
+      "postal_code": "1400",
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335724/%E1%83%A8%E1%83%98%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%90%E1%83%A9%E1%83%90%E1%83%91%E1%83%9A%E1%83%9D%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AA%E1%83%AE%E1%83%94%20%20%E1%83%AF%E1%83%90%E1%83%95%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Regional center page on 08.ge."
+    },
+    {
+      "id": "gori-municipal",
+      "center_type": "municipal_branch",
+      "region": "შიდა ქართლი",
+      "city": "გორი",
+      "district_or_municipality": "გორი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების გორის მუნიციპალური განყოფილება",
+      "address_ka": "გორი, სტალინის გამზ. 48",
+      "postal_code": null,
+      "local_phone": "+995511542230",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335725/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%9D%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "kaspi-municipal",
+      "center_type": "municipal_branch",
+      "region": "შიდა ქართლი",
+      "city": "კასპი",
+      "district_or_municipality": "კასპი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების კასპის მუნიციპალური განყოფილება",
+      "address_ka": "კასპი, მერაბ კოსტავას ქ. 37",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335724/%E1%83%A8%E1%83%98%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%90%E1%83%A9%E1%83%90%E1%83%91%E1%83%9A%E1%83%9D%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AA%E1%83%AE%E1%83%94%20%20%E1%83%AF%E1%83%90%E1%83%95%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Shida Kartli regional center page."
+    },
+    {
+      "id": "kareli-municipal",
+      "center_type": "municipal_branch",
+      "region": "შიდა ქართლი",
+      "city": "ქარელი",
+      "district_or_municipality": "ქარელი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ქარელის მუნიციპალური განყოფილება",
+      "address_ka": "ქარელი, დავით მუსხელიშვილის ქ. 7",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335724/%E1%83%A8%E1%83%98%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%90%E1%83%A9%E1%83%90%E1%83%91%E1%83%9A%E1%83%9D%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AA%E1%83%AE%E1%83%94%20%20%E1%83%AF%E1%83%90%E1%83%95%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Shida Kartli regional center page."
+    },
+    {
+      "id": "khashuri-municipal",
+      "center_type": "municipal_branch",
+      "region": "შიდა ქართლი",
+      "city": "ხაშური",
+      "district_or_municipality": "ხაშური",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ხაშურის მუნიციპალური განყოფილება",
+      "address_ka": "ხაშური, მერაბ კოსტავას ქ. 11",
+      "postal_code": "5700",
+      "local_phone": "+995511542229",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335729/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%AE%E1%83%90%E1%83%A8%E1%83%A3%E1%83%A0%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "eredvi-municipal",
+      "center_type": "municipal_branch",
+      "region": "შიდა ქართლი",
+      "city": "გორი",
+      "district_or_municipality": "ერედვი",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ერედვის მუნიციპალური განყოფილება",
+      "address_ka": "გორი, სტალინის გამზ. 48",
+      "postal_code": "1400",
+      "local_phone": "+995511542240",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335732/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%94%E1%83%A0%E1%83%94%E1%83%93%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "kurta-municipal",
+      "center_type": "municipal_branch",
+      "region": "შიდა ქართლი",
+      "city": "გორი",
+      "district_or_municipality": "ქურთა",
+      "name_ka": "სამხედრო აღრიცხვის გაწვევისა და რეკრუტირების ქურთას მუნიციპალური განყოფილება",
+      "address_ka": "გორი, სტალინის გამზ. 48",
+      "postal_code": null,
+      "local_phone": null,
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "directory_cross_reference",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335724/%E1%83%A8%E1%83%98%E1%83%93%E1%83%90%20%E1%83%A5%E1%83%90%E1%83%A0%E1%83%97%E1%83%9A%E1%83%98%E1%83%A1%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%90%E1%83%A9%E1%83%90%E1%83%91%E1%83%9A%E1%83%9D%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AA%E1%83%AE%E1%83%94%20%20%E1%83%AF%E1%83%90%E1%83%95%E1%83%90%E1%83%AE%E1%83%94%E1%83%97%E1%83%98%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%98%E1%83%9D%E1%83%9C%E1%83%A3%E1%83%9A%E1%83%98%20%E1%83%AA%E1%83%94%E1%83%9C%E1%83%A2%E1%83%A0%E1%83%98"
+      ],
+      "notes": "Address was listed as a subsidiary on the Shida Kartli regional center page."
+    },
+    {
+      "id": "akhalkalaki-municipal",
+      "center_type": "municipal_branch",
+      "region": "სამცხე-ჯავახეთი",
+      "city": "ახალქალაქი",
+      "district_or_municipality": "ახალქალაქი",
+      "name_ka": "სამხედრო აღრიცხვის, გაწვევისა და რეკრუტირების ახალქალაქის მუნიციპალური განყოფილება",
+      "address_ka": "ახალქალაქი, ბორის ლომსაძის ქ. 73ა",
+      "postal_code": "0700",
+      "local_phone": "+995511542235",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335744/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%2C%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%90%E1%83%AE%E1%83%90%E1%83%9A%E1%83%A5%E1%83%90%E1%83%9A%E1%83%90%E1%83%A5%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    },
+    {
+      "id": "adigeni-municipal",
+      "center_type": "municipal_branch",
+      "region": "სამცხე-ჯავახეთი",
+      "city": "ადიგენი",
+      "district_or_municipality": "ადიგენი",
+      "name_ka": "სამხედრო აღრიცხვის, გაწვევისა და რეკრუტირების ადიგენის მუნიციპალური განყოფილება",
+      "address_ka": "ადიგენი, თამარ მეფის ქ. 5",
+      "postal_code": "0300",
+      "local_phone": "+995511542234",
+      "shared_hotline": "+995533331918",
+      "email": "namcr@mod.gov.ge",
+      "website": "https://conscript.mod.gov.ge",
+      "working_hours_ka": "09:00-18:00, პარასკევი 09:00-15:00",
+      "verification_status": "third_party_directory",
+      "source_urls": [
+        "https://www.08.ge/organizations/view/335742/%E1%83%A1%E1%83%90%E1%83%9B%E1%83%AE%E1%83%94%E1%83%93%E1%83%9D%20%E1%83%A0%E1%83%94%E1%83%92%E1%83%A1%E1%83%A2%E1%83%A0%E1%83%90%E1%83%AA%E1%83%98%E1%83%98%E1%83%A1%2C%20%E1%83%92%E1%83%90%E1%83%AC%E1%83%95%E1%83%94%E1%83%95%E1%83%98%E1%83%A1%20%E1%83%93%E1%83%90%20%E1%83%A0%E1%83%94%E1%83%99%E1%83%A0%E1%83%A3%E1%83%A2%E1%83%98%E1%83%A0%E1%83%94%E1%83%91%E1%83%98%E1%83%A1%20%E1%83%90%E1%83%93%E1%83%98%E1%83%92%E1%83%94%E1%83%9C%E1%83%98%E1%83%A1%20%E1%83%9B%E1%83%A3%E1%83%9C%E1%83%98%E1%83%AA%E1%83%98%E1%83%9E%E1%83%90%E1%83%9A%E1%83%A3%E1%83%A0%E1%83%98%20%E1%83%92%E1%83%90%E1%83%9C%E1%83%A7%E1%83%9D%E1%83%A4%E1%83%98%E1%83%9A%E1%83%94%E1%83%91%E1%83%90"
+      ],
+      "notes": "Direct municipal page on 08.ge."
+    }
+  ]
+}

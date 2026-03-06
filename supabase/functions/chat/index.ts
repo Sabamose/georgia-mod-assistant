@@ -1,4 +1,5 @@
 import { buildSystemPrompt } from "./prompt.ts";
+import { buildGuidanceMetadata } from "./guidance.ts";
 import { streamAnthropicChat } from "./providers/anthropic.ts";
 import { streamOpenAIChat } from "./providers/openai.ts";
 import {
@@ -13,6 +14,11 @@ import { createAnthropicCompatibleStream } from "./stream-normalizer.ts";
 const VALID_ROLES = new Set(["user", "assistant"]);
 const VALID_LANGUAGES = new Set(["en", "ka"]);
 const MAX_MESSAGE_LENGTH = 4000;
+const MAX_HISTORY_MESSAGES = 24;
+const MAX_TOTAL_MESSAGE_CHARS = 12_000;
+const DEFAULT_RATE_LIMIT_WINDOW_MS = 60_000;
+const DEFAULT_RATE_LIMIT_MAX_REQUESTS = 12;
+const INVALID_JSON_ERROR_MESSAGE = "Invalid JSON body";
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://georgia-mod-assistant.vercel.app",
   "http://localhost:5173",
@@ -22,6 +28,7 @@ const DEFAULT_ALLOWED_ORIGINS = [
   "http://127.0.0.1:5180",
   "http://127.0.0.1:4173",
 ];
+const rateLimitBuckets = new Map<string, { count: number; resetAt: number }>();
 
 function getAllowedOrigins(): string[] {
   const envValue = Deno.env.get("ALLOWED_ORIGINS")?.trim();
@@ -35,19 +42,25 @@ function getAllowedOrigins(): string[] {
   return origins.length > 0 ? origins : DEFAULT_ALLOWED_ORIGINS;
 }
 
-function getCorsHeaders(req?: Request) {
-  const allowedOrigins = getAllowedOrigins();
-  const origin = req?.headers.get("origin") || "";
-  const allowedOrigin = allowedOrigins.includes(origin)
-    ? origin
-    : allowedOrigins[0];
-
-  return {
-    "Access-Control-Allow-Origin": allowedOrigin,
+function getCorsHeaders(req?: Request, allowedOrigin?: string | null) {
+  const headers: Record<string, string> = {
     "Access-Control-Allow-Headers":
       "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
   };
+
+  if (req?.headers.get("origin") && allowedOrigin) {
+    headers["Access-Control-Allow-Origin"] = allowedOrigin;
+  }
+
+  return headers;
+}
+
+function resolveAllowedOrigin(req?: Request): string | null {
+  const origin = req?.headers.get("origin")?.trim();
+  if (!origin) return null;
+  return getAllowedOrigins().includes(origin) ? origin : null;
 }
 
 function jsonResponse(
@@ -71,6 +84,14 @@ function logEvent(payload: Record<string, unknown>) {
   }));
 }
 
+function getNumericEnv(name: string, fallback: number): number {
+  const rawValue = Deno.env.get(name)?.trim();
+  if (!rawValue) return fallback;
+
+  const parsed = Number(rawValue);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
 function sanitizeMessages(messages: unknown): ChatMessage[] {
   if (!Array.isArray(messages)) return [];
 
@@ -91,7 +112,7 @@ function sanitizeMessages(messages: unknown): ChatMessage[] {
 }
 
 function mergeMessages(messages: ChatMessage[]): ChatMessage[] {
-  let trimmed = messages.slice(-40);
+  let trimmed = messages.slice(-MAX_HISTORY_MESSAGES);
 
   while (trimmed.length > 0 && trimmed[0].role === "assistant") {
     trimmed = trimmed.slice(1);
@@ -100,13 +121,93 @@ function mergeMessages(messages: ChatMessage[]): ChatMessage[] {
   const merged: ChatMessage[] = [];
   for (const message of trimmed) {
     if (merged.length > 0 && merged[merged.length - 1].role === message.role) {
-      merged[merged.length - 1].content += `\n${message.content}`;
+      merged[merged.length - 1].content = `${merged[merged.length - 1].content}\n${message.content}`
+        .slice(-MAX_MESSAGE_LENGTH);
     } else {
       merged.push({ ...message });
     }
   }
 
+  let totalChars = merged.reduce((sum, message) => sum + message.content.length, 0);
+  while (merged.length > 1 && totalChars > MAX_TOTAL_MESSAGE_CHARS) {
+    totalChars -= merged[0].content.length;
+    merged.shift();
+  }
+
+  if (merged.length > 0 && merged[0].role === "assistant") {
+    merged.shift();
+  }
+
+  if (merged.length > 0 && totalChars > MAX_TOTAL_MESSAGE_CHARS) {
+    merged[0].content = merged[0].content.slice(-MAX_TOTAL_MESSAGE_CHARS);
+  }
+
   return merged;
+}
+
+function getClientIdentifier(req: Request): string | null {
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    const firstIp = forwardedFor.split(",")[0]?.trim();
+    if (firstIp) return firstIp;
+  }
+
+  const headerKeys = ["cf-connecting-ip", "x-real-ip", "fly-client-ip"];
+  for (const headerKey of headerKeys) {
+    const value = req.headers.get(headerKey)?.trim();
+    if (value) return value;
+  }
+
+  return null;
+}
+
+function consumeRateLimit(req: Request) {
+  const clientId = getClientIdentifier(req);
+  if (!clientId) {
+    return { allowed: true, remaining: null, retryAfterSeconds: null };
+  }
+
+  const now = Date.now();
+  for (const [bucketKey, bucket] of rateLimitBuckets.entries()) {
+    if (bucket.resetAt <= now) {
+      rateLimitBuckets.delete(bucketKey);
+    }
+  }
+
+  const windowMs = getNumericEnv("CHAT_RATE_LIMIT_WINDOW_MS", DEFAULT_RATE_LIMIT_WINDOW_MS);
+  const maxRequests = getNumericEnv("CHAT_RATE_LIMIT_MAX_REQUESTS", DEFAULT_RATE_LIMIT_MAX_REQUESTS);
+  const existing = rateLimitBuckets.get(clientId);
+
+  if (!existing || existing.resetAt <= now) {
+    rateLimitBuckets.set(clientId, {
+      count: 1,
+      resetAt: now + windowMs,
+    });
+    return {
+      allowed: true,
+      remaining: maxRequests - 1,
+      retryAfterSeconds: Math.ceil(windowMs / 1000),
+    };
+  }
+
+  if (existing.count >= maxRequests) {
+    return {
+      allowed: false,
+      remaining: 0,
+      retryAfterSeconds: Math.max(1, Math.ceil((existing.resetAt - now) / 1000)),
+    };
+  }
+
+  existing.count += 1;
+  return {
+    allowed: true,
+    remaining: Math.max(0, maxRequests - existing.count),
+    retryAfterSeconds: Math.max(1, Math.ceil((existing.resetAt - now) / 1000)),
+  };
+}
+
+function jsonRequestError() {
+  return new Error(INVALID_JSON_ERROR_MESSAGE);
 }
 
 function getProvider(name: ChatProviderName) {
@@ -132,16 +233,62 @@ function shouldFallback(
 }
 
 Deno.serve(async (req: Request) => {
-  const cors = getCorsHeaders(req);
   const requestId = req.headers.get("x-request-id") || crypto.randomUUID();
   const startedAt = Date.now();
+  const allowedOrigin = resolveAllowedOrigin(req);
+  const cors = getCorsHeaders(req, allowedOrigin);
 
   if (req.method === "OPTIONS") {
+    if (req.headers.get("origin") && !allowedOrigin) {
+      return jsonResponse(cors, 403, { error: "Origin not allowed" });
+    }
+
     return new Response("ok", { headers: cors });
   }
 
+  if (req.method !== "POST") {
+    return jsonResponse(cors, 405, { error: "Method not allowed" });
+  }
+
+  if (req.headers.get("origin") && !allowedOrigin) {
+    logEvent({
+      event: "chat_request_blocked_origin",
+      request_id: requestId,
+      origin: req.headers.get("origin"),
+      status_code: 403,
+    });
+    return jsonResponse(cors, 403, { error: "Origin not allowed", request_id: requestId });
+  }
+
+  const rateLimit = consumeRateLimit(req);
+  if (!rateLimit.allowed) {
+    logEvent({
+      event: "chat_request_rate_limited",
+      request_id: requestId,
+      status_code: 429,
+    });
+
+    return new Response(JSON.stringify({
+      error: "Too many requests",
+      request_id: requestId,
+    }), {
+      status: 429,
+      headers: {
+        ...cors,
+        "Content-Type": "application/json",
+        "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+      },
+    });
+  }
+
   try {
-    const body = await req.json();
+    let body: { language?: string; messages?: unknown };
+    try {
+      body = await req.json();
+    } catch {
+      throw jsonRequestError();
+    }
+
     const language = VALID_LANGUAGES.has(body.language) ? body.language : "en";
     const safeLang = language as ChatLanguage;
     const sanitizedMessages = sanitizeMessages(body.messages);
@@ -152,6 +299,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const systemPrompt = buildSystemPrompt(safeLang);
+    const guidance = buildGuidanceMetadata(mergedMessages, safeLang);
     const primaryProvider = getConfiguredProvider("AI_PROVIDER", "openai");
     const fallbackProvider = getConfiguredProvider("AI_FALLBACK_PROVIDER", "anthropic");
     let activeProvider = primaryProvider;
@@ -203,6 +351,10 @@ Deno.serve(async (req: Request) => {
       requestId,
       model: result.model,
       textStream: result.textStream,
+      messageStopPayload: {
+        journey: guidance.journey,
+        blocks: guidance.blocks,
+      },
       onComplete: () => {
         logEvent({
           event: "chat_stream_complete",
@@ -237,8 +389,11 @@ Deno.serve(async (req: Request) => {
       },
     });
   } catch (error) {
+    const invalidJson = error instanceof Error && error.message === INVALID_JSON_ERROR_MESSAGE;
     const statusCode = error instanceof ProviderError
       ? (error.statusCode && error.statusCode >= 400 ? 502 : 500)
+      : invalidJson
+      ? 400
       : 500;
     logEvent({
       event: "chat_request_error",
@@ -253,7 +408,11 @@ Deno.serve(async (req: Request) => {
     });
 
     return jsonResponse(cors, statusCode, {
-      error: statusCode === 502 ? "AI service error" : "Internal server error",
+      error: statusCode === 400
+        ? "Invalid JSON body"
+        : statusCode === 502
+        ? "AI service error"
+        : "Internal server error",
       request_id: requestId,
     });
   }
