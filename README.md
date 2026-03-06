@@ -17,7 +17,7 @@ Georgia reinstated mandatory military service on January 1, 2025 via the new Def
 
 - **Frontend:** React 19 + Vite
 - **Backend:** Supabase Edge Functions (Deno)
-- **AI:** Claude Sonnet 4.5 (Anthropic API)
+- **AI:** GPT-5.4 primary (OpenAI Responses API) with Claude Sonnet fallback (Anthropic API)
 - **Languages:** Georgian (formal თქვენ-register) + English
 
 ## Architecture
@@ -25,10 +25,10 @@ Georgia reinstated mandatory military service on January 1, 2025 via the new Def
 Same proven architecture as [Qeti](https://github.com/user/georgia-consulate-assistant) (Georgia MFA consular assistant):
 
 ```
-Frontend (React) → Supabase Edge Function → Anthropic Claude API
-     ↑                    ↑
-     |                    |
-  Widget UI         System Prompt + Knowledge Base
+Frontend (React) → Supabase Edge Function → OpenAI GPT-5.4
+     ↑                    ↑                     ↓
+     |                    |                Anthropic fallback
+  Widget UI         Prompt + KB + Provider routing
 ```
 
 ## Getting Started
@@ -39,6 +39,21 @@ npm install
 
 # Start dev server
 npm run dev
+
+# Georgian factual suite
+npm run test:stress
+
+# Georgian quality suite
+npm run test:quality
+
+# Provider comparison (requires OPENAI_API_KEY and ANTHROPIC_API_KEY)
+npm run test:providers
+
+# Browser smoke test
+npm run test:smoke
+
+# Browser smoke test against a deployed demo as well
+SMOKE_REMOTE_URL=https://georgia-mod-assistant.vercel.app npm run test:smoke
 
 # Build for production
 npm run build
@@ -52,7 +67,18 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-The Supabase Edge Function requires `ANTHROPIC_API_KEY` set in Supabase secrets.
+The frontend should only contain public Supabase values. Keep model API keys in Supabase secrets only.
+
+Recommended Supabase secrets:
+```
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-5.4-2026-03-05
+AI_PROVIDER=openai
+AI_FALLBACK_PROVIDER=anthropic
+ANTHROPIC_API_KEY=...
+ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+ALLOWED_ORIGINS=https://georgia-mod-assistant.vercel.app,http://localhost:5173,http://localhost:5180
+```
 
 ## Knowledge Coverage
 
@@ -76,13 +102,28 @@ georgia-mod-assistant/
 │   ├── App.css          # Widget styles (military green theme)
 │   ├── index.css        # Landing page styles
 │   └── main.jsx         # React entry point
+├── tests/
+│   ├── _shared.mjs      # Shared evaluation helpers
+│   ├── stress-test-georgian.mjs
+│   ├── georgian-quality-check.mjs
+│   ├── georgian-quality-cases.json
+│   ├── compare-providers.mjs
+│   └── smoke.spec.js
 ├── supabase/
 │   └── functions/
 │       └── chat/
-│           └── index.ts # Edge function (Claude + knowledge base)
+│           ├── index.ts                # Request validation + provider routing
+│           ├── prompt.ts               # Prompt + KB assembly
+│           ├── stream-normalizer.ts    # Anthropic-compatible SSE output
+│           └── providers/
+│               ├── openai.ts
+│               ├── anthropic.ts
+│               ├── shared.ts
+│               └── types.ts
 ├── knowledge-base.txt   # Comprehensive KB (also embedded in edge fn)
 ├── SYSTEM_PROMPT.md     # Full system prompt documentation
 ├── DEMO_CHEATSHEET.md   # Demo scenario scripts
+├── playwright.config.js
 └── public/              # Static assets
 ```
 

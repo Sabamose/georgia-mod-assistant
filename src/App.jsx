@@ -1,9 +1,19 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import "./App.css";
 
-const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL || "").replace(/\s/g, "");
-const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY || "").replace(/\s/g, "");
+// Public Supabase values keep the demo working even if Vercel public env vars are missing.
+const DEFAULT_SUPABASE_URL = "https://avmiutasxlrrvfaggmcp.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2bWl1dGFzeGxycnZmYWdnbWNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTkwNTcsImV4cCI6MjA4ODIzNTA1N30.GOfF4yP-7hJfM9HrexmzaiTZ7HgBV8GT9dZKYtHrJBk";
+const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL).replace(/\s/g, "");
+const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY).replace(/\s/g, "");
 const THINKING_MIN_MS = 800;
+
+function getClientConfigError(language) {
+  return language === "ka"
+    ? "დემო ჯერ არ არის კონფიგურირებული. აკლია Supabase-ის საჯარო პარამეტრები."
+    : "This demo is not configured yet. Public Supabase settings are missing.";
+}
 
 /* Inline SVG flags — emoji flags don't render on Windows */
 const FlagEN = () => (
@@ -62,9 +72,9 @@ const T = {
     welcome: "\u10DB\u10DD\u10D2\u10D4\u10E1\u10D0\u10DA\u10DB\u10D4\u10D1\u10D8\u10D7!",
     howHelp: "\u10E0\u10D8\u10D7 \u10E8\u10D4\u10D2\u10D5\u10D8\u10EB\u10DA\u10D8\u10D0 \u10D3\u10D0\u10D2\u10D4\u10EE\u10DB\u10D0\u10E0\u10DD\u10D7?",
     newConvo: "\u10D0\u10EE\u10D0\u10DA\u10D8 \u10E1\u10D0\u10E3\u10D1\u10D0\u10E0\u10D8",
-    poweredBy: "Powered by",
+    poweredBy: "\u10E8\u10D4\u10DB\u10E3\u10E8\u10D0\u10D5\u10D4\u10D1\u10E3\u10DA\u10D8\u10D0",
     ministry: "\u10D7\u10D0\u10D5\u10D3\u10D0\u10EA\u10D5\u10D8\u10E1 \u10E1\u10D0\u10DB\u10D8\u10DC\u10D8\u10E1\u10E2\u10E0\u10DD",
-    aiAssistant: "AI \u10D0\u10E1\u10D8\u10E1\u10E2\u10D4\u10DC\u10E2\u10D8",
+    aiAssistant: "\u10EA\u10D8\u10E4\u10E0\u10E3\u10DA\u10D8 \u10D0\u10E1\u10D8\u10E1\u10E2\u10D4\u10DC\u10E2\u10D8",
     connecting: "\u10DB\u10D8\u10DB\u10D3\u10D8\u10DC\u10D0\u10E0\u10D4\u10DD\u10D1\u10E1 \u10D9\u10D0\u10D5\u10E8\u10D8\u10E0\u10D8...",
     chatWith: "\u10E9\u10D0\u10E2\u10D8 \u10DC\u10D8\u10D9\u10D0\u10E1\u10D7\u10D0\u10DC",
     offline: "\u10DD\u10E4\u10DA\u10D0\u10D8\u10DC",
@@ -89,6 +99,26 @@ const SERVICES = [
   { id: "deferral", icon: "clock", titleKey: "deferralTitle", descKey: "deferralDesc" },
   { id: "reserve", icon: "users", titleKey: "reserveTitle", descKey: "reserveDesc" },
 ];
+
+const SERVICE_SEED_PROMPTS = {
+  en: {
+    mandatory: "I need information about mandatory military service.",
+    contract: "I need information about professional contract military service.",
+    deferral: "I need information about deferrals and exemptions.",
+    reserve: "I need information about reserve service.",
+  },
+  ka: {
+    mandatory: "სავალდებულო სამხედრო სამსახურის შესახებ ინფორმაცია მინდა.",
+    contract: "საკონტრაქტო სამხედრო სამსახურის შესახებ ინფორმაცია მინდა.",
+    deferral: "გადავადებისა და გათავისუფლების შესახებ ინფორმაცია მინდა.",
+    reserve: "რეზერვის შესახებ ინფორმაცია მინდა.",
+  },
+};
+
+function getServiceSeedPrompt(serviceId, language) {
+  const prompts = SERVICE_SEED_PROMPTS[language] || SERVICE_SEED_PROMPTS.en;
+  return prompts[serviceId] || SERVICE_SEED_PROMPTS.en.mandatory;
+}
 
 /* Service SVG Icons */
 function ServiceIcon({ type, size = 28 }) {
@@ -239,12 +269,24 @@ function App() {
       .slice(-40)
       .map(m => ({ role: m.role === "user" ? "user" : "assistant", content: m.text }));
 
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      setIsThinking(false);
+      setMessages(p => [...p, {
+        role: "ai",
+        text: getClientConfigError(activeLang),
+        ts: Date.now(),
+        error: true,
+      }]);
+      return;
+    }
+
     try {
       const res = await fetch(`${SUPABASE_URL}/functions/v1/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+          "apikey": SUPABASE_ANON_KEY,
         },
         body: JSON.stringify({ messages: apiMessages, language: activeLang }),
         signal: controller.signal,
@@ -413,10 +455,7 @@ function App() {
       if (abortControllerRef.current) abortControllerRef.current.abort();
       setIsThinking(false);
       if (selectedService) {
-        const svcName = (T[code] || T.en)[selectedService.titleKey];
-        const svcMsg = code === "ka"
-          ? `მინდა გავიგო ${svcName}-ს შესახებ.`
-          : `I'd like to learn about ${svcName}.`;
+        const svcMsg = getServiceSeedPrompt(selectedService.id, code);
         const newMsgs = [{ role: "user", text: svcMsg, ts: Date.now() }];
         setMessages(newMsgs);
         sendToAPI(newMsgs, code);
@@ -431,10 +470,7 @@ function App() {
     if (abortControllerRef.current) abortControllerRef.current.abort();
     setSelectedService(service);
     setView("chat"); setIsThinking(false); setStatus("connected");
-    const svcName = (T[lang] || T.en)[service.titleKey];
-    const svcMsg = lang === "ka"
-      ? `მინდა გავიგო ${svcName}-ს შესახებ.`
-      : `I'd like to learn about ${svcName}.`;
+    const svcMsg = getServiceSeedPrompt(service.id, lang);
     const initialMsgs = [{ role: "user", text: svcMsg, ts: Date.now() }];
     setMessages(initialMsgs);
     sendToAPI(initialMsgs);
@@ -498,7 +534,7 @@ function App() {
             <img src="/logo.png" alt="MOD Georgia" className="landing-hero-logo" />
           </div>
         </div>
-        <div className="landing-footer"><span>{lang === "ka" ? "\u10E1\u10D0\u10E5\u10D0\u10E0\u10D7\u10D5\u10D4\u10DA\u10DD\u10E1 \u10D7\u10D0\u10D5\u10D3\u10D0\u10EA\u10D5\u10D8\u10E1 \u10E1\u10D0\u10DB\u10D8\u10DC\u10D8\u10E1\u10E2\u10E0\u10DD" : "Ministry of Defense of Georgia"} &middot; AI Assistant Nika</span></div>
+        <div className="landing-footer"><span>{lang === "ka" ? "\u10E1\u10D0\u10E5\u10D0\u10E0\u10D7\u10D5\u10D4\u10DA\u10DD\u10E1 \u10D7\u10D0\u10D5\u10D3\u10D0\u10EA\u10D5\u10D8\u10E1 \u10E1\u10D0\u10DB\u10D8\u10DC\u10D8\u10E1\u10E2\u10E0\u10DD" : "Ministry of Defense of Georgia"} &middot; {lang === "ka" ? "\u10D0\u10E1\u10D8\u10E1\u10E2\u10D4\u10DC\u10E2\u10D8 \u10DC\u10D8\u10D9\u10D0" : "AI Assistant Nika"}</span></div>
       </div>
 
       {/* Widget */}

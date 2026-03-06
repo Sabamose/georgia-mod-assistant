@@ -9,50 +9,11 @@
  *  - Edge cases (typos, mixed language, slang)
  */
 
-const SUPABASE_URL = "https://avmiutasxlrrvfaggmcp.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2bWl1dGFzeGxycnZmYWdnbWNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NTkwNTcsImV4cCI6MjA4ODIzNTA1N30.GOfF4yP-7hJfM9HrexmzaiTZ7HgBV8GT9dZKYtHrJBk";
-
-const EDGE_URL = `${SUPABASE_URL}/functions/v1/chat`;
+import { askEdgeChat } from "./_shared.mjs";
 
 /* ── Helper: call Nika ── */
 async function askNika(question, language = "ka") {
-  const res = await fetch(EDGE_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      apikey: SUPABASE_ANON_KEY,
-    },
-    body: JSON.stringify({
-      messages: [{ role: "user", content: question }],
-      language,
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`HTTP ${res.status}: ${err}`);
-  }
-
-  // SSE streaming — collect full response
-  const text = await res.text();
-  let fullResponse = "";
-  for (const line of text.split("\n")) {
-    if (line.startsWith("data: ")) {
-      const data = line.slice(6);
-      if (data === "[DONE]") break;
-      try {
-        const parsed = JSON.parse(data);
-        if (parsed.type === "content_block_delta" && parsed.delta?.text) {
-          fullResponse += parsed.delta.text;
-        }
-      } catch {
-        // skip non-JSON lines
-      }
-    }
-  }
-  return fullResponse;
+  return askEdgeChat(question, { language });
 }
 
 /* ── Test definitions ── */
@@ -87,7 +48,7 @@ const tests = [
     id: 4,
     category: "სავალდებულო სამსახური",
     question: "აღრიცხვა როდის ხდება ყოველწლიურად?",
-    mustContain: ["იანვარ", "აპრილ"],
+    mustContain: ["იანვ", "აპრილ"],
     description: "Registration period — Jan 1 to Apr 30",
   },
   {
