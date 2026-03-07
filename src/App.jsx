@@ -630,6 +630,50 @@ function App() {
 
   useEffect(() => { if (!langMenuOpen) return; const h = () => setLangMenuOpen(false); document.addEventListener("click", h); return () => document.removeEventListener("click", h); }, [langMenuOpen]);
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isThinking]);
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const mediaQuery = window.matchMedia("(max-width: 768px), (max-height: 720px) and (pointer: coarse)");
+    const syncExpandedState = () => {
+      if (mediaQuery.matches) {
+        setIsExpanded(false);
+      }
+    };
+
+    syncExpandedState();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncExpandedState);
+      return () => mediaQuery.removeEventListener("change", syncExpandedState);
+    }
+
+    mediaQuery.addListener(syncExpandedState);
+    return () => mediaQuery.removeListener(syncExpandedState);
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const mediaQuery = window.matchMedia("(max-width: 768px), (max-height: 720px) and (pointer: coarse)");
+    if (!isOpen || !mediaQuery.matches) return undefined;
+
+    const { body, documentElement } = document;
+    const previousBodyOverflow = body.style.overflow;
+    const previousBodyOverscroll = body.style.overscrollBehavior;
+    const previousHtmlOverflow = documentElement.style.overflow;
+    const previousHtmlOverscroll = documentElement.style.overscrollBehavior;
+
+    body.style.overflow = "hidden";
+    body.style.overscrollBehavior = "none";
+    documentElement.style.overflow = "hidden";
+    documentElement.style.overscrollBehavior = "none";
+
+    return () => {
+      body.style.overflow = previousBodyOverflow;
+      body.style.overscrollBehavior = previousBodyOverscroll;
+      documentElement.style.overflow = previousHtmlOverflow;
+      documentElement.style.overscrollBehavior = previousHtmlOverscroll;
+    };
+  }, [isOpen]);
 
   /* HTTP Streaming */
   const flushPendingChunks = useCallback(() => { const c = pendingChunksRef.current; if (!c.length) return; pendingChunksRef.current = []; setIsThinking(false); setMessages(p => [...p, { role: "ai-stream", text: c.join(""), ts: Date.now() }]); }, []);
