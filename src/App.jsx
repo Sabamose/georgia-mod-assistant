@@ -242,48 +242,7 @@ function isLowValuePreamble(paragraph, structuredTexts) {
     /no further action is required/i,
   ];
 
-  const looksLikeContactFooter =
-    (/(\+995\s*\(?\d{2,3}\)?\s*\d{3}\s*\d{2}\s*\d{2}|https?:\/\/\S+|mod\.gov\.ge|@[a-z0-9.-]+)/i
-      .test(paragraph) &&
-      /(ცხელი ხაზი|ვებგვერდ|დამატებითი ინფორმაციისთვის|მიმართეთ|hotline|website|for more information|contact)/i
-        .test(paragraph));
-
-  if (looksLikeContactFooter) {
-    return true;
-  }
-
   return bannedGenericPatterns.some((pattern) => pattern.test(paragraph));
-}
-
-function trimStructuredLeadText(text) {
-  const normalized = text.trim();
-  if (!normalized) return "";
-  if (normalized.length <= 260) return normalized;
-
-  const sentences = normalized
-    .split(/(?<=[.!?])\s+/u)
-    .map((sentence) => sentence.trim())
-    .filter(Boolean);
-
-  if (sentences.length === 0) {
-    return `${normalized.slice(0, 257).trimEnd()}...`;
-  }
-
-  const kept = [];
-  let totalLength = 0;
-
-  for (const sentence of sentences) {
-    const nextLength = totalLength + sentence.length + (kept.length ? 1 : 0);
-    if (kept.length >= 2 || nextLength > 260) break;
-    kept.push(sentence);
-    totalLength = nextLength;
-  }
-
-  if (kept.length > 0) {
-    return kept.join(" ");
-  }
-
-  return `${normalized.slice(0, 257).trimEnd()}...`;
 }
 
 function getRenderableAssistantText(message) {
@@ -312,58 +271,8 @@ function getRenderableAssistantText(message) {
     firstUsefulIndex += 1;
   }
 
-  const cleanedParagraphs = paragraphs.slice(firstUsefulIndex);
-  if (cleanedParagraphs.length === 0) return "";
-
-  const cleaned = trimStructuredLeadText(cleanedParagraphs[0]);
-  if (!cleaned) return "";
-  if (structuredTexts.has(normalizeComparableText(cleaned))) return "";
+  const cleaned = paragraphs.slice(firstUsefulIndex).join("\n\n").trim();
   return cleaned;
-}
-
-function extractContactItems(text, language) {
-  const items = [];
-  const seen = new Set();
-  const pushItem = (item) => {
-    if (!item?.href || seen.has(item.href)) return;
-    seen.add(item.href);
-    items.push(item);
-  };
-
-  const phoneMatch = text.match(/\+995\s*\(?\d{2,3}\)?\s*\d{3}\s*\d{2}\s*\d{2}/);
-  if (phoneMatch) {
-    const digits = phoneMatch[0].replace(/\D/g, "");
-    pushItem({
-      label: language === "ka" ? "ცხელი ხაზი" : "Hotline",
-      value: phoneMatch[0],
-      href: `tel:+${digits}`,
-      icon: "\u{1F4DE}",
-    });
-  }
-
-  const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  if (emailMatch) {
-    pushItem({
-      label: language === "ka" ? "ელფოსტა" : "Email",
-      value: emailMatch[0],
-      href: `mailto:${emailMatch[0]}`,
-      icon: "\u2709\uFE0F",
-    });
-  }
-
-  const websiteMatch = text.match(/https?:\/\/[^\s)]+/i) || text.match(/\bmod\.gov\.ge\b/i);
-  if (websiteMatch) {
-    const raw = websiteMatch[0];
-    const href = raw.startsWith("http") ? raw : `https://${raw}`;
-    pushItem({
-      label: language === "ka" ? "ვებგვერდი" : "Website",
-      value: raw.replace(/^https?:\/\//i, ""),
-      href,
-      icon: "\u{1F517}",
-    });
-  }
-
-  return items;
 }
 
 /* Markdown renderer */
@@ -641,7 +550,6 @@ function GuidanceBlocks({ blocks, onQuickReply, language }) {
         if (block.type === "follow_up_chips") {
           return (
             <div key={key} className="guidance-follow-ups">
-              {block.title ? <div className="guidance-follow-ups-title">{block.title}</div> : null}
               {block.items.map((item) => (
                 <button
                   key={item.prompt}
@@ -661,31 +569,16 @@ function GuidanceBlocks({ blocks, onQuickReply, language }) {
   );
 }
 
-function ContactCard({ text, language }) {
-  const items = extractContactItems(text, language);
-  if (items.length === 0) return null;
-
+function ContactCard({ text }) {
+  const ph = text.match(/\+995\s*\(?\d{2,3}\)?\s*\d{3}\s*\d{2}\s*\d{2}/);
+  const em = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  if (!ph && !em) return null;
   return (
-    <div className="contact-card contact-card-compact">
-      <div className="contact-card-title">
-        {language === "ka" ? "სასარგებლო ბმულები" : "Useful links"}
-      </div>
-      <div className="contact-card-pills">
-        {items.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            className="contact-pill"
-            target={item.href.startsWith("http") ? "_blank" : undefined}
-            rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-          >
-            <span className="contact-pill-icon">{item.icon}</span>
-            <span className="contact-pill-copy">
-              <strong>{item.label}</strong>
-              <span>{item.value}</span>
-            </span>
-          </a>
-        ))}
+    <div className="contact-card">
+      <div className="contact-card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Contact</div>
+      <div className="contact-card-items">
+        {ph && <a href={`tel:+${ph[0].replace(/\D/g,"")}`} className="contact-card-item"><span className="contact-card-icon">{"\u{1F4DE}"}</span><span>{ph[0]}</span></a>}
+        {em && <a href={`mailto:${em[0]}`} className="contact-card-item"><span className="contact-card-icon">{"\u2709\uFE0F"}</span><span>{em[0]}</span></a>}
       </div>
     </div>
   );
@@ -1189,7 +1082,7 @@ function App() {
                             <GuidanceBlocks blocks={msg.blocks} onQuickReply={handleQuickReply} language={lang} />
                           )}
                           {msg.role === "ai" && (!Array.isArray(msg.blocks) || !msg.blocks.some(block => block.type === "contact_card")) && (
-                            <ContactCard text={msg.text} language={lang} />
+                            <ContactCard text={msg.text} />
                           )}
                         </>
                       )}
