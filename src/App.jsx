@@ -295,6 +295,7 @@ function getRenderableAssistantText(message) {
 
   const blocks = Array.isArray(message?.blocks) ? message.blocks : [];
   if (blocks.length === 0) return rawText;
+  if (blocks.some((block) => block.type === "summary")) return "";
 
   const paragraphs = rawText
     .split(/\n\s*\n/)
