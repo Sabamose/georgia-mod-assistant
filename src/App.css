@@ -105,11 +105,20 @@
 /* Contact card */
 .contact-card { margin-top: 10px; border: 1px solid var(--mod-border); border-left: 3px solid var(--mod-primary); border-radius: 10px; padding: 12px 14px; background: var(--mod-primary-pale); }
 .contact-card-title { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--mod-primary); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
-.contact-card-items { display: flex; flex-direction: column; gap: 6px; }
+.contact-card-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .contact-card-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--mod-bg); border: 1px solid var(--mod-border); text-decoration: none; color: var(--mod-text); font-size: 13px; font-weight: 500; transition: all .15s; cursor: pointer; }
 .contact-card-item:hover { border-color: var(--mod-primary); background: var(--mod-primary-pale); }
 .contact-card-item-link { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; width: 100%; }
 .contact-card-icon { font-size: 14px; flex-shrink: 0; }
+.contact-card-compact { padding: 10px 12px; background: linear-gradient(180deg, rgba(45,74,46,.08), rgba(255,255,255,.98)); }
+.contact-card-compact .contact-card-title { margin-bottom: 10px; font-size: 11px; }
+.contact-card-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.contact-pill { display: inline-flex; align-items: center; gap: 8px; min-width: 0; padding: 9px 12px; border-radius: 999px; border: 1px solid rgba(45,74,46,.14); background: var(--mod-bg); color: var(--mod-primary); text-decoration: none; transition: all .15s; }
+.contact-pill:hover { background: var(--mod-primary-pale); border-color: var(--mod-primary); }
+.contact-pill-icon { flex-shrink: 0; font-size: 13px; }
+.contact-pill-copy { display: flex; align-items: flex-start; gap: 6px; min-width: 0; }
+.contact-pill-copy strong { font-size: 11px; line-height: 1.2; white-space: nowrap; }
+.contact-pill-copy span { font-size: 12px; line-height: 1.2; color: var(--mod-text-subtle); overflow: hidden; text-overflow: ellipsis; }
 
 /* Guidance blocks */
 .guidance-blocks { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
@@ -163,7 +172,8 @@
 .guidance-source-item:hover { border-color: rgba(45,74,46,.22); background: var(--mod-primary-pale); }
 .guidance-source-label { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--mod-text-subtle); }
 .guidance-source-detail { font-size: 12px; line-height: 1.45; color: var(--mod-primary); }
-.guidance-follow-ups { display: flex; flex-wrap: wrap; gap: 6px; }
+.guidance-follow-ups { display: flex; flex-direction: column; gap: 8px; }
+.guidance-follow-ups-title { font-size: 12px; line-height: 1.4; color: var(--mod-text-subtle); }
 
 /* ═══ QUICK ACTION BUTTONS ═══ */
 .chat-quick-actions { display: flex; gap: 8px; padding: 4px 0; animation: msgFade .3s cubic-bezier(.16,1,.3,1); }
@@ -235,6 +245,9 @@
   .msg-user .msg-content { padding: 8px 14px; }
   .quick-action-btn { padding: 8px 14px; font-size: 12px; min-height: 44px; }
   .suggested-reply-chip { padding: 8px 12px; font-size: 11px; min-height: 36px; max-width: 100%; white-space: normal; line-height: 1.3; text-align: left; }
+  .contact-card-items { grid-template-columns: 1fr; }
+  .contact-pill { width: 100%; border-radius: 12px; }
+  .contact-pill-copy { flex-direction: column; gap: 2px; }
   .panel-input-wrap { padding: 10px 14px 14px; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
   .panel-input-box { padding: 10px 12px; border-radius: 12px; }
   .panel-textarea { font-size: 16px; }
@@ -272,7 +285,10 @@
   .rich-list { padding-left: 16px; }
   .rich-list li { font-size: 13px; }
   .contact-card { padding: 12px 14px; border-radius: 10px; }
+  .contact-card-items { grid-template-columns: 1fr; }
   .contact-card-item { padding: 8px 12px; font-size: 13px; min-height: 44px; }
+  .contact-pill { width: 100%; border-radius: 12px; }
+  .contact-pill-copy { flex-direction: column; gap: 2px; }
   .guidance-facts-grid { grid-template-columns: 1fr; }
   .guidance-card { padding: 12px; }
   .guidance-center-actions { flex-direction: column; }

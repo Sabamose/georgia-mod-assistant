@@ -44,6 +44,7 @@ export type GuidanceBlock =
   }
   | {
     type: "follow_up_chips";
+    title?: string;
     items: Array<{ label: string; prompt: string }>;
   };
 
@@ -77,6 +78,20 @@ type CaseProfile = {
   warFamilyLoss?: boolean;
 };
 
+type ResponseMode = "overview" | "focused";
+
+type GuidanceContext = {
+  latestUserText: string;
+  responseMode: ResponseMode;
+  hasPersonalContext: boolean;
+  asksDeferralAndExemption: boolean;
+  wantsDocuments: boolean;
+  wantsProcess: boolean;
+  wantsSources: boolean;
+  wantsContact: boolean;
+  wantsOperatorSummary: boolean;
+};
+
 const HOTLINE = "+995 32 2 72 10 00";
 const INFO_EMAIL = "info@mod.gov.ge";
 const MOD_WEBSITE = "https://mod.gov.ge";
@@ -88,13 +103,13 @@ const MOD_MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=20+General+G.+Kvinitadze+St,+Tbilisi,+Georgia";
 
 const CITY_PATTERNS: Array<{ city: string; pattern: RegExp }> = [
-  { city: "თბილისი", pattern: /\b(tbilisi|თბილისი|თბილისში|თბილისის)\b/i },
-  { city: "ქუთაისი", pattern: /\b(kutaisi|ქუთაისი|ქუთაისში|ქუთაისის)\b/i },
-  { city: "ბათუმი", pattern: /\b(batumi|ბათუმი|ბათუმში|ბათუმის)\b/i },
-  { city: "გორი", pattern: /\b(gori|გორი|გორში)\b/i },
-  { city: "ზუგდიდი", pattern: /\b(zugdidi|ზუგდიდი|ზუგდიდში)\b/i },
-  { city: "თელავი", pattern: /\b(telavi|თელავი|თელავში)\b/i },
-  { city: "რუსთავი", pattern: /\b(rustavi|რუსთავი|რუსთავში)\b/i },
+  { city: "თბილისი", pattern: /(tbilisi|თბილისი|თბილისში|თბილისის)/i },
+  { city: "ქუთაისი", pattern: /(kutaisi|ქუთაისი|ქუთაისში|ქუთაისის)/i },
+  { city: "ბათუმი", pattern: /(batumi|ბათუმი|ბათუმში|ბათუმის)/i },
+  { city: "გორი", pattern: /(gori|გორი|გორში)/i },
+  { city: "ზუგდიდი", pattern: /(zugdidi|ზუგდიდი|ზუგდიდში)/i },
+  { city: "თელავი", pattern: /(telavi|თელავი|თელავში)/i },
+  { city: "რუსთავი", pattern: /(rustavi|რუსთავი|რუსთავში)/i },
 ];
 
 function t(language: ChatLanguage, ka: string, en: string): string {
@@ -107,6 +122,99 @@ function normalizeText(messages: ChatMessage[]): string {
     .map((message) => message.content)
     .join("\n")
     .trim();
+}
+
+function latestUserText(messages: ChatMessage[]): string {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    if (messages[index]?.role === "user") {
+      return messages[index].content.trim();
+    }
+  }
+
+  return "";
+}
+
+function hasPersonalContext(profile: CaseProfile): boolean {
+  return [
+    typeof profile.age === "number",
+    profile.gender !== undefined,
+    profile.student === true,
+    typeof profile.childrenCount === "number" && profile.childrenCount > 0,
+    profile.singleFather === true,
+    profile.soleProvider === true,
+    profile.disabledDependent === true,
+    profile.healthIssue === true,
+    profile.dualCitizen === true,
+    profile.abroad === true,
+    profile.foreignService === true,
+    profile.completedService === true,
+    profile.city !== undefined,
+    profile.clergy === true,
+    profile.warFamilyLoss === true,
+  ].some(Boolean);
+}
+
+function asksDocuments(text: string): boolean {
+  return /\b(document|documents|required|paperwork)\b/i.test(text) ||
+    /(საბუთ|დოკუმენტ|რა მჭირდება|რა უნდა წავიღო)/i.test(text);
+}
+
+function asksProcess(text: string): boolean {
+  return /\b(process|procedure|what next|next step|how do i|how should i|where should i go)\b/i
+    .test(text) ||
+    /(პროცეს|პროცედურ|შემდეგი ნაბიჯ|რა ვქნა|როგორ მოვიქცე|სად მივიდე|რა უნდა გავაკეთო)/i
+      .test(text);
+}
+
+function asksSources(text: string): boolean {
+  return /\b(source|sources|official source|official page)\b/i.test(text) ||
+    /(წყარო|ოფიციალური წყარო|ოფიციალური გვერდი)/i.test(text);
+}
+
+function asksContact(text: string): boolean {
+  return /\b(contact|hotline|phone|address|where can i call)\b/i.test(text) ||
+    /(კონტაქტ|ცხელი ხაზი|ტელეფონ|ნომერი|მისამართი)/i.test(text);
+}
+
+function asksOperatorSummary(text: string): boolean {
+  return /\b(summary for operator|operator summary|handoff summary)\b/i.test(text) ||
+    /(ოპერატორ|შეჯამება|მოკლე შეჯამება)/i.test(text);
+}
+
+function asksDeferralAndExemption(text: string): boolean {
+  const deferral = /(deferral|გადავადებ)/i.test(text);
+  const exemption = /(exemption|გათავისუფლებ)/i.test(text);
+  return deferral && exemption;
+}
+
+function looksLikeBroadOverview(text: string, profile: CaseProfile): boolean {
+  if (hasPersonalContext(profile)) return false;
+  if (asksDocuments(text) || asksProcess(text) || asksContact(text) || asksOperatorSummary(text)) {
+    return false;
+  }
+
+  return /\b(about|information|tell me about|overview|conditions|options|how it works)\b/i.test(text) ||
+    /(ინფორმაცია|შესახებ|მითხარით|პირობები|ვარიანტ|როგორ მუშაობს|ზოგადად)/i.test(text);
+}
+
+function buildGuidanceContext(
+  messages: ChatMessage[],
+  profile: CaseProfile,
+): GuidanceContext {
+  const latestText = latestUserText(messages);
+  const personalContext = hasPersonalContext(profile);
+
+  return {
+    latestUserText: latestText,
+    responseMode: looksLikeBroadOverview(latestText, profile) ? "overview" : "focused",
+    hasPersonalContext: personalContext,
+    asksDeferralAndExemption: asksDeferralAndExemption(latestText),
+    wantsDocuments: asksDocuments(latestText),
+    wantsProcess: asksProcess(latestText),
+    wantsSources: asksSources(latestText),
+    wantsContact: asksContact(latestText),
+    wantsOperatorSummary: asksOperatorSummary(latestText),
+  };
 }
 
 function extractAge(text: string): number | undefined {
@@ -127,11 +235,11 @@ function extractAge(text: string): number | undefined {
 }
 
 function extractChildrenCount(text: string): number | undefined {
-  const numeric = text.match(/\b(\d+)\s*(?:minor children|children|შვილი|შვილები)\b/i);
+  const numeric = text.match(/\b(\d+)\s*(?:minor children|children|შვილი|შვილები)/i);
   if (numeric) return Number(numeric[1]);
 
-  if (/\b(ორი|two)\s+(?:minor\s+)?(?:children|შვილი|შვილები)\b/i.test(text)) return 2;
-  if (/\b(სამი|three)\s+(?:minor\s+)?(?:children|შვილი|შვილები)\b/i.test(text)) return 3;
+  if (/(ორი|two)\s+(?:minor\s+)?(?:children|შვილი|შვილები)/i.test(text)) return 2;
+  if (/(სამი|three)\s+(?:minor\s+)?(?:children|შვილი|შვილები)/i.test(text)) return 3;
 
   return undefined;
 }
@@ -151,66 +259,74 @@ function extractProfile(messages: ChatMessage[]): CaseProfile {
 
   return {
     age: extractAge(text),
-    gender: /\b(ქალი|female|woman)\b/i.test(text)
+    gender: /(ქალი|female|woman)/i.test(text)
       ? "female"
-      : /\b(კაცი|მამაკაცი|male|man)\b/i.test(text)
+      : /(კაცი|მამაკაცი|male|man)/i.test(text)
       ? "male"
       : undefined,
-    student: /\b(სტუდენტ|student|university|უნივერსიტეტ|bachelor|master|doctoral|phd)\b/i.test(text)
+    student: /(სტუდენტ|student|university|უნივერსიტეტ|bachelor|master|doctoral|phd)/i.test(text)
       ? true
       : undefined,
     childrenCount: extractChildrenCount(text),
-    singleFather: /\b(single father|sole caretaker|მარტოხელა მამ|ერთადერთი მზრუნველი)\b/i.test(text)
+    singleFather: /(single father|sole caretaker|მარტოხელა მამ|ერთადერთი მზრუნველი)/i.test(text)
       ? true
       : undefined,
-    soleProvider: /\b(sole family provider|family provider|მარჩენალი|ოჯახის ერთადერთი შემომტანი)\b/i.test(text)
+    soleProvider: /(sole family provider|family provider|მარჩენალი|ოჯახის ერთადერთი შემომტანი)/i.test(text)
       ? true
       : undefined,
-    disabledDependent: /\b(disabled family member|disabled dependent|caregiver|შშმ ოჯახის წევრ|შეზღუდული შესაძლებლობის მქონე ოჯახის წევრ|მოვლის ქვეშ მყოფი)\b/i
+    disabledDependent: /(disabled family member|disabled dependent|caregiver|შშმ ოჯახის წევრ|შეზღუდული შესაძლებლობის მქონე ოჯახის წევრ|მოვლის ქვეშ მყოფი)/i
       .test(text)
       ? true
       : undefined,
-    healthIssue: /\b(health|medical|diagnos|ჯანმრთელ|სამედიცინო|ავად|კომისია|უვარგისი)\b/i.test(text)
+    healthIssue: /(health|medical|diagnos|ჯანმრთელ|სამედიცინო|დიაგნოზ|კომისია|უვარგის|ავადმყოფ)/i.test(text)
       ? true
       : undefined,
-    dualCitizen: /\b(dual citizen|dual citizenship|ორმაგი მოქალაქ)\b/i.test(text)
+    dualCitizen: /(dual citizen|dual citizenship|ორმაგი მოქალაქ)/i.test(text)
       ? true
       : undefined,
-    abroad: /\b(abroad|outside georgia|living abroad|საზღვარგარეთ|უცხოეთში|ემიგრაცი)\b/i.test(text)
+    abroad: /(abroad|outside georgia|living abroad|საზღვარგარეთ|უცხოეთში|ემიგრაცი)/i.test(text)
       ? true
       : undefined,
-    foreignService: /\b(foreign military service|served abroad|საზღვარგარეთ სამხედრო სამსახური|უცხო ქვეყნის ჯარში)\b/i
+    foreignService: /(foreign military service|served abroad|საზღვარგარეთ სამხედრო სამსახური|უცხო ქვეყნის ჯარში)/i
       .test(text)
       ? true
       : undefined,
-    completedService: /\b(completed service|finished service|served already|მოვიხადე სამსახური|გავლილი მაქვს სამხედრო სამსახური)\b/i
+    completedService: /(completed service|finished service|served already|მოვიხადე სამსახური|გავლილი მაქვს სამხედრო სამსახური)/i
       .test(text)
       ? true
       : undefined,
     city: extractCity(text),
-    contractInterest: /\b(contract|professional military|career in the military|საკონტრაქტო|პროფესიულ სამსახურში|კარიერა ჯარში)\b/i
+    contractInterest: /(contract|professional military|career in the military|საკონტრაქტო|პროფესიულ სამსახურში|კარიერა ჯარში)/i
       .test(text)
       ? true
       : undefined,
-    clergy: /\b(clergy|priest|orthodox clergy|სასულიერო პირ|მღვდელ|დიაკვნ)\b/i.test(text)
+    clergy: /(clergy|priest|orthodox clergy|სასულიერო პირ|მღვდელ|დიაკვნ)/i.test(text)
       ? true
       : undefined,
-    warFamilyLoss: /\b(another family member died in military service|war casualty|only son|ომში დაღუპული ოჯახის წევრი|სამხედრო სამსახურში დაღუპული ოჯახის წევრი|ომში გარდაცვლილი)\b/i
+    warFamilyLoss: /(another family member died in military service|war casualty|only son|ომში დაღუპული ოჯახის წევრი|სამხედრო სამსახურში დაღუპული ოჯახის წევრი|ომში გარდაცვლილი)/i
       .test(text)
       ? true
       : undefined,
   };
 }
 
-function detectJourney(messages: ChatMessage[], profile: CaseProfile): JourneyId {
+function detectJourney(
+  messages: ChatMessage[],
+  profile: CaseProfile,
+  context: GuidanceContext,
+): JourneyId {
   const text = normalizeText(messages);
 
-  if (/\b(alternative service|conscientious|religious grounds|ethical grounds|ალტერნატიულ|რელიგიურ|ეთიკურ|იარაღის ტარება არ)\b/i.test(text)) {
+  if (context.responseMode === "overview" && context.asksDeferralAndExemption) {
+    return "general";
+  }
+
+  if (/(alternative service|conscientious|religious grounds|ethical grounds|ალტერნატიულ|რელიგიურ|ეთიკურ|იარაღის ტარება არ)/i.test(text)) {
     return "alternative_service";
   }
 
   if (
-    /\b(გადავადება|deferral|student defer|სტუდენტი ვარ|paid deferral|ფასიანი გადავადება)\b/i.test(text) ||
+    /(გადავადებ|deferral|student defer|სტუდენტი ვარ|paid deferral|ფასიანი გადავადებ)/i.test(text) ||
     profile.student || (profile.childrenCount ?? 0) >= 2 || profile.singleFather ||
     profile.soleProvider || profile.disabledDependent
   ) {
@@ -218,36 +334,36 @@ function detectJourney(messages: ChatMessage[], profile: CaseProfile): JourneyId
   }
 
   if (
-    /\b(გათავისუფლება|exemption|medical commission|უვარგისი|foreign military service|clergy|სამედიცინო კომისია)\b/i.test(text) ||
+    /(გათავისუფლებ|exemption|medical commission|უვარგის|foreign military service|clergy|სამედიცინო კომისი)/i.test(text) ||
     profile.healthIssue || profile.foreignService || profile.clergy || profile.warFamilyLoss
   ) {
     return "exemption";
   }
 
   if (
-    /\b(საკონტრაქტო|contract service|professional service|salary|ხელფასი|join professionally|კარიერა)\b/i.test(text) ||
+    /(საკონტრაქტო|contract service|professional service|salary|ხელფასი|join professionally|კარიერა)/i.test(text) ||
     profile.contractInterest
   ) {
     return "contract_service";
   }
 
-  if (/\b(რეზერვი|reserve|mobilization|მობილიზაცია)\b/i.test(text) || profile.completedService) {
+  if (/(რეზერვი|reserve|mobilization|მობილიზაცია)/i.test(text) || profile.completedService) {
     return "reserve";
   }
 
   if (
-    /\b(dual citizen|citizenship|renounce citizenship|abroad|diaspora|ორმაგი მოქალაქ|მოქალაქეობის უარყოფა|დიასპორა|საზღვარგარეთ)\b/i
+    /(dual citizen|citizenship|renounce citizenship|abroad|diaspora|ორმაგი მოქალაქ|მოქალაქეობის უარყოფა|დიასპორა|საზღვარგარეთ)/i
       .test(text) ||
     profile.dualCitizen || profile.abroad
   ) {
     return "diaspora";
   }
 
-  if (/\b(contact|hotline|phone|center|address|კონტაქტ|ცხელი ხაზი|ნომერი|მისამართი|ცენტრი)\b/i.test(text)) {
+  if (/(contact|hotline|phone|center|address|კონტაქტ|ცხელი ხაზი|ნომერი|მისამართი|ცენტრი)/i.test(text)) {
     return "contact";
   }
 
-  if (/\b(service|draft|registration|call-up|mandatory|conscript|აღრიცხვა|გაწვევა|სავალდებულო)\b/i.test(text)) {
+  if (/(service|draft|registration|call-up|mandatory|conscript|აღრიცხვა|გაწვევა|სავალდებულო)/i.test(text)) {
     return "mandatory_service";
   }
 
@@ -370,11 +486,12 @@ function buildProfileFacts(profile: CaseProfile, language: ChatLanguage) {
 function buildMandatoryGuidance(
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
   let summary = t(
     language,
-    "სავარაუდოდ, თქვენთვის რელევანტურია სავალდებულო სამხედრო სამსახურის პროცესი.",
-    "The likely relevant path for you is mandatory military service.",
+    "სავალდებულო სამხედრო სამსახური, როგორც წესი, ეხება 18–27 წლის მამაკაც მოქალაქეებს.",
+    "Mandatory military service generally applies to male citizens aged 18–27.",
   );
   let tone: "neutral" | "positive" | "warning" = "neutral";
 
@@ -400,10 +517,14 @@ function buildMandatoryGuidance(
     );
   }
 
+  if (context.responseMode === "overview") {
+    summary = `${summary} ${t(language, "თუ გსურთ, ამას თქვენს შემთხვევაზეც მოვარგებ.", "If you want, I can tailor this to your case.")}`;
+  }
+
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "სავარაუდო მარშრუტი", "Likely route"),
+      title: t(language, "მოკლედ", "In short"),
       text: summary,
       tone,
     },
@@ -411,7 +532,7 @@ function buildMandatoryGuidance(
       type: "key_facts",
       title: t(language, "მთავარი ფაქტები", "Key facts"),
       items: [
-        ...buildProfileFacts(profile, language),
+        ...(context.hasPersonalContext ? buildProfileFacts(profile, language) : []),
         {
           label: t(language, "ასაკობრივი დიაპაზონი", "Age range"),
           value: t(language, "18–27", "18–27"),
@@ -446,20 +567,21 @@ function buildMandatoryGuidance(
         t(language, `საჭიროების შემთხვევაში გამოიყენეთ სამინისტროს ცხელი ხაზი: ${HOTLINE}.`, `If needed, use the MOD hotline: ${HOTLINE}.`),
       ],
     },
-  ], "mandatory_service", profile, language);
+  ], "mandatory_service", profile, language, context);
 }
 
 function buildDeferralGuidance(
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
   let summary = t(
     language,
-    "თქვენი აღწერილობით, ყველაზე რელევანტური მიმართულება გადავადებაა.",
-    "Based on your description, the most relevant path is deferral.",
+    "გადავადება ნიშნავს სამხედრო სამსახურის დროებით გადატანას შესაბამისი საფუძვლით.",
+    "Deferral means temporarily postponing military service on an eligible ground.",
   );
 
-  const facts = [...buildProfileFacts(profile, language)];
+  const facts = [...(context.hasPersonalContext ? buildProfileFacts(profile, language) : [])];
   const documents = [t(language, "განაცხადი", "Application form"), t(language, "პირადობის მოწმობა", "National ID card")];
   const nextSteps = [
     t(language, "მოამზადეთ დამადასტურებელი დოკუმენტები.", "Prepare the supporting documents."),
@@ -500,19 +622,38 @@ function buildDeferralGuidance(
       t(language, "შვილების დაბადების მოწმობები", "Children's birth certificates"),
     );
   } else {
-    facts.push(
+    if (context.hasPersonalContext) {
+      facts.push(
+        {
+          label: t(language, "ფასიანი გადავადება", "Paid deferral"),
+          value: t(language, "5,000 GEL, ერთჯერადად, მაქსიმუმ 1 წელი", "5,000 GEL, one-time, maximum 1 year"),
+        },
+      );
+    }
+    documents.push(t(language, "გადახდის დამადასტურებელი დოკუმენტი", "Payment confirmation"));
+  }
+
+  if (!context.hasPersonalContext) {
+    facts.unshift(
+      {
+        label: t(language, "ხშირი საფუძვლები", "Common grounds"),
+        value: t(language, "სტუდენტი, 2+ არასრულწლოვანი შვილი, დროებითი ჯანმრთელობა", "Student status, 2+ minor children, temporary health issue"),
+      },
       {
         label: t(language, "ფასიანი გადავადება", "Paid deferral"),
         value: t(language, "5,000 GEL, ერთჯერადად, მაქსიმუმ 1 წელი", "5,000 GEL, one-time, maximum 1 year"),
       },
     );
-    documents.push(t(language, "გადახდის დამადასტურებელი დოკუმენტი", "Payment confirmation"));
+  }
+
+  if (context.responseMode === "overview") {
+    summary = `${summary} ${t(language, "თუ გსურთ, ახლა ზუსტად თქვენს სიტუაციაზე მოვარგებ.", "If you want, I can tailor it to your situation next.")}`;
   }
 
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "სავარაუდო მარშრუტი", "Likely route"),
+      title: t(language, "მოკლედ", "In short"),
       text: summary,
       tone: "warning",
     },
@@ -531,18 +672,19 @@ function buildDeferralGuidance(
       title: t(language, "შემდეგი ნაბიჯები", "Next steps"),
       items: nextSteps,
     },
-  ], "deferral", profile, language);
+  ], "deferral", profile, language, context);
 }
 
 function buildExemptionGuidance(
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
-  const facts = [...buildProfileFacts(profile, language)];
+  const facts = [...(context.hasPersonalContext ? buildProfileFacts(profile, language) : [])];
   let summary = t(
     language,
-    "თქვენი აღწერილობით, გათავისუფლების ან სამედიცინო შეფასების მარშრუტი ჩანს რელევანტური.",
-    "Based on your description, exemption or a medical evaluation route looks relevant.",
+    "გათავისუფლება ნიშნავს სამხედრო ვალდებულებისგან განთავისუფლებას შესაბამისი ოფიციალური საფუძვლით.",
+    "Exemption means release from military obligation on an official legal ground.",
   );
   const documents = [t(language, "პირადობის მოწმობა", "National ID card")];
 
@@ -601,10 +743,21 @@ function buildExemptionGuidance(
     );
   }
 
+  if (!context.hasPersonalContext) {
+    facts.unshift({
+      label: t(language, "ხშირი საფუძვლები", "Common grounds"),
+      value: t(language, "უვარგისი კატეგორია, უცხოეთში გავლილი სამსახური, სასულიერო პირი", "Unfit category, completed foreign service, ordained clergy"),
+    });
+  }
+
+  if (context.responseMode === "overview") {
+    summary = `${summary} ${t(language, "თუ გსურთ, შემდეგ შესაბამის საფუძველს ერთად დავაზუსტებთ.", "If you want, we can narrow down the relevant ground next.")}`;
+  }
+
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "სავარაუდო მარშრუტი", "Likely route"),
+      title: t(language, "მოკლედ", "In short"),
       text: summary,
       tone: "warning",
     },
@@ -627,17 +780,18 @@ function buildExemptionGuidance(
         t(language, `თქვენი კონკრეტული შემთხვევისთვის გამოიყენეთ ცხელი ხაზი: ${HOTLINE}.`, `For your specific case, use the hotline: ${HOTLINE}.`),
       ],
     },
-  ], "exemption", profile, language);
+  ], "exemption", profile, language, context);
 }
 
 function buildContractGuidance(
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
   let summary = t(
     language,
-    "თქვენი აღწერილობით, პროფესიული ან საკონტრაქტო სამხედრო სამსახურის მიმართულება ჩანს რელევანტური.",
-    "Based on your description, professional or contract military service looks relevant.",
+    "საკონტრაქტო სამხედრო სამსახური არის პროფესიული სამხედრო კარიერის გზა 18–35 წლის მოქალაქეებისთვის.",
+    "Contract military service is the professional military-career path for citizens aged 18–35.",
   );
 
   if (typeof profile.age === "number" && (profile.age < 18 || profile.age > 35)) {
@@ -648,10 +802,14 @@ function buildContractGuidance(
     );
   }
 
+  if (context.responseMode === "overview") {
+    summary = `${summary} ${t(language, "თუ გსურთ, შემდეგ მოთხოვნებს, ხელფასს ან საბუთებს მოკლედ დაგილაგებთ.", "If you want, I can next break down requirements, salary, or documents.")}`;
+  }
+
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "სავარაუდო მარშრუტი", "Likely route"),
+      title: t(language, "მოკლედ", "In short"),
       text: summary,
       tone: "positive",
     },
@@ -659,7 +817,7 @@ function buildContractGuidance(
       type: "key_facts",
       title: t(language, "მთავარი ფაქტები", "Key facts"),
       items: [
-        ...buildProfileFacts(profile, language),
+        ...(context.hasPersonalContext ? buildProfileFacts(profile, language) : []),
         {
           label: t(language, "ასაკობრივი დიაპაზონი", "Age range"),
           value: t(language, "18–35", "18–35"),
@@ -694,17 +852,18 @@ function buildContractGuidance(
         t(language, "მოამზადეთ გასაუბრებისა და უსაფრთხოების შემოწმებისთვის საჭირო დოკუმენტები.", "Prepare for the interview and background review."),
       ],
     },
-  ], "contract_service", profile, language);
+  ], "contract_service", profile, language, context);
 }
 
 function buildReserveGuidance(
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "სავარაუდო მარშრუტი", "Likely route"),
+      title: t(language, "მოკლედ", "In short"),
       text: t(
         language,
         "თუ სამხედრო სამსახური უკვე გავლილი გაქვთ, სავარაუდოდ რეზერვის რეჟიმი გეხებათ.",
@@ -736,17 +895,18 @@ function buildReserveGuidance(
         t(language, `კონკრეტული შეკითხვისთვის გამოიყენეთ ცხელი ხაზი: ${HOTLINE}.`, `For case-specific questions, use the hotline: ${HOTLINE}.`),
       ],
     },
-  ], "reserve", profile, language);
+  ], "reserve", profile, language, context);
 }
 
 function buildDiasporaGuidance(
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "სავარაუდო მარშრუტი", "Likely route"),
+      title: t(language, "მოკლედ", "In short"),
       text: t(
         language,
         "თქვენი აღწერილობით, დიასპორისა და სამხედრო ვალდებულების საკითხი ჩანს რელევანტური.",
@@ -778,17 +938,18 @@ function buildDiasporaGuidance(
         t(language, "თუ გაქვთ უცხოეთის სამხედრო სამსახურის დოკუმენტები, მოამზადეთ აპოსტილირებული და ნათარგმნი ასლები.", "If you have foreign military service documents, prepare apostilled and translated copies."),
       ],
     },
-  ], "diaspora", profile, language);
+  ], "diaspora", profile, language, context);
 }
 
 function buildAlternativeGuidance(
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "სავარაუდო მარშრუტი", "Likely route"),
+      title: t(language, "მოკლედ", "In short"),
       text: t(
         language,
         "თქვენი აღწერილობით, ალტერნატიული სამსახურის პროცესი ჩანს რელევანტური.",
@@ -828,10 +989,14 @@ function buildAlternativeGuidance(
         t(language, "მოემზადეთ კომისიის შეფასებისთვის.", "Prepare for commission review."),
       ],
     },
-  ], "alternative_service", profile, language);
+  ], "alternative_service", profile, language, context);
 }
 
-function buildContactGuidance(profile: CaseProfile, language: ChatLanguage): GuidanceBlock[] {
+function buildContactGuidance(
+  profile: CaseProfile,
+  language: ChatLanguage,
+  context: GuidanceContext,
+): GuidanceBlock[] {
   const cityLine = profile.city
     ? t(
       language,
@@ -847,7 +1012,7 @@ function buildContactGuidance(profile: CaseProfile, language: ChatLanguage): Gui
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "საკონტაქტო გზა", "Contact path"),
+      title: t(language, "მოკლედ", "In short"),
       text: cityLine,
       tone: "neutral",
     },
@@ -862,21 +1027,55 @@ function buildContactGuidance(profile: CaseProfile, language: ChatLanguage): Gui
         { label: t(language, "სამუშაო საათები", "Working hours"), value: t(language, MOD_HOURS_KA, MOD_HOURS) },
       ]),
     },
-  ], "contact", profile, language);
+  ], "contact", profile, language, context);
 }
 
 function buildGeneralGuidance(
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
+  if (context.asksDeferralAndExemption) {
+    return appendJourneyBlocks([
+      {
+        type: "summary",
+        title: t(language, "მოკლედ", "In short"),
+        text: t(
+          language,
+          "გადავადება ნიშნავს სამხედრო სამსახურის დროებით გადატანას, ხოლო გათავისუფლება ნიშნავს ვალდებულებისგან განთავისუფლებას შესაბამისი ოფიციალური საფუძვლით. თუ გსურთ, ახლავე ზუსტად თქვენს შემთხვევაზე მოვარგებ.",
+          "Deferral means a temporary postponement of service, while exemption means release from the obligation on an official legal ground. If you want, I can tailor it to your case next.",
+        ),
+        tone: "neutral",
+      },
+      {
+        type: "key_facts",
+        title: t(language, "მთავარი განსხვავება", "Main distinction"),
+        items: compactKeyFacts([
+          {
+            label: t(language, "გადავადება", "Deferral"),
+            value: t(language, "სტუდენტი, 2+ არასრულწლოვანი შვილი, დროებითი ჯანმრთელობა, ფასიანი გადავადება", "Student status, 2+ minor children, temporary health issue, paid deferral"),
+          },
+          {
+            label: t(language, "გათავისუფლება", "Exemption"),
+            value: t(language, "უვარგისი კატეგორია, უცხოეთის სამხედრო სამსახური, სასულიერო პირის სტატუსი", "Unfit category, completed foreign service, ordained clergy status"),
+          },
+          {
+            label: t(language, "ვინ ადასტურებს", "Who confirms it"),
+            value: t(language, "სამხედრო აღრიცხვის ცენტრი, საჭიროების შემთხვევაში სამედიცინო კომისია", "Military registration center, and the medical commission when required"),
+          },
+        ]),
+      },
+    ], "general", profile, language, context);
+  }
+
   return appendJourneyBlocks([
     {
       type: "summary",
-      title: t(language, "როგორ დაგეხმაროთ უკეთ", "How to help you better"),
+      title: t(language, "მოკლედ", "In short"),
       text: t(
         language,
-        "თუ მომწერთ ასაკს, სტატუსს და საკითხის ტიპს, უფრო ზუსტ მარშრუტს და შემდეგ ნაბიჯებს გაჩვენებთ.",
-        "If you share your age, status, and topic, I can show a more precise route and next steps.",
+        "მომწერეთ ასაკი, სტატუსი ან კონკრეტული თემა და ზუსტად თქვენს სიტუაციაზე მოვარგებ პასუხს.",
+        "Share your age, status, or exact topic and I will tailor the answer to your situation.",
       ),
       tone: "neutral",
     },
@@ -889,7 +1088,7 @@ function buildGeneralGuidance(
         t(language, "გაინტერესებთ გადავადება, გათავისუფლება, საკონტრაქტო სამსახური თუ სხვა თემა", "Whether you need deferral, exemption, contract service, or another topic"),
       ],
     },
-  ], "general", profile, language);
+  ], "general", profile, language, context);
 }
 
 function compactKeyFacts(
@@ -1309,19 +1508,109 @@ function buildSourceBlock(
   };
 }
 
+function limitKeyFactsBlock(
+  block: GuidanceBlock | undefined,
+  maxItems: number,
+): GuidanceBlock | null {
+  if (!block || block.type !== "key_facts") return null;
+  return {
+    ...block,
+    items: block.items.slice(0, maxItems),
+  };
+}
+
+function limitListBlock(
+  block: GuidanceBlock | undefined,
+  maxItems: number,
+): GuidanceBlock | null {
+  if (!block || (block.type !== "documents" && block.type !== "next_steps")) return null;
+  return {
+    ...block,
+    items: block.items.slice(0, maxItems),
+  };
+}
+
+function limitFollowUpBlock(
+  block: GuidanceBlock,
+  maxItems: number,
+): GuidanceBlock {
+  if (block.type !== "follow_up_chips") return block;
+  return {
+    ...block,
+    items: block.items.slice(0, maxItems),
+  };
+}
+
+function selectPrimaryBlocks(
+  baseBlocks: GuidanceBlock[],
+  context: GuidanceContext,
+): GuidanceBlock[] {
+  const summaryBlock = baseBlocks.find((block) => block.type === "summary");
+  const factsBlock = baseBlocks.find((block) => block.type === "key_facts");
+  const documentsBlock = baseBlocks.find((block) => block.type === "documents");
+  const nextStepsBlock = baseBlocks.find((block) => block.type === "next_steps");
+
+  if (context.responseMode === "overview") {
+    return compactBlocks([
+      summaryBlock ?? null,
+      limitKeyFactsBlock(factsBlock, 3),
+    ]);
+  }
+
+  if (context.wantsDocuments) {
+    return compactBlocks([
+      summaryBlock ?? null,
+      limitListBlock(documentsBlock, 4),
+      !documentsBlock ? limitKeyFactsBlock(factsBlock, 3) : null,
+    ]);
+  }
+
+  if (context.wantsProcess) {
+    return compactBlocks([
+      summaryBlock ?? null,
+      limitListBlock(nextStepsBlock, 3),
+      !nextStepsBlock ? limitKeyFactsBlock(factsBlock, 3) : null,
+    ]);
+  }
+
+  return compactBlocks([
+    summaryBlock ?? null,
+    limitKeyFactsBlock(factsBlock, 4),
+  ]);
+}
+
+function buildSupplementaryBlocks(
+  journey: JourneyId,
+  profile: CaseProfile,
+  language: ChatLanguage,
+  context: GuidanceContext,
+): GuidanceBlock[] {
+  const includeVerification = context.responseMode === "focused" &&
+    (context.hasPersonalContext || context.wantsDocuments || context.wantsProcess);
+  const includeContactCard = journey === "contact" || context.wantsContact;
+
+  return compactBlocks([
+    includeVerification ? buildVerificationNote(journey, profile, language) : null,
+    context.wantsOperatorSummary ? buildHandoffSummary(journey, profile, language) : null,
+    includeContactCard ? buildContactCard(language) : null,
+    context.wantsSources ? buildSourceBlock(journey, language) : null,
+    limitFollowUpBlock(
+      buildFollowUpChips(journey, language, context),
+      context.responseMode === "overview" ? 4 : 3,
+    ),
+  ]);
+}
+
 function appendJourneyBlocks(
   baseBlocks: GuidanceBlock[],
   journey: JourneyId,
   profile: CaseProfile,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock[] {
   return compactBlocks([
-    ...baseBlocks,
-    buildVerificationNote(journey, profile, language),
-    buildHandoffSummary(journey, profile, language),
-    buildContactCard(language),
-    buildSourceBlock(journey, language),
-    buildFollowUpChips(journey, language),
+    ...selectPrimaryBlocks(baseBlocks, context),
+    ...buildSupplementaryBlocks(journey, profile, language, context),
   ]);
 }
 
@@ -1361,17 +1650,36 @@ function buildContactCard(language: ChatLanguage): GuidanceBlock {
 function buildFollowUpChips(
   journey: JourneyId,
   language: ChatLanguage,
+  context: GuidanceContext,
 ): GuidanceBlock {
+  if (context.asksDeferralAndExemption) {
+    return {
+      type: "follow_up_chips",
+      title: t(language, "თუ გსურთ, აქედან გავაგრძელოთ:", "If you want, we can continue with:"),
+      items: language === "ka"
+        ? [
+          { label: "სტუდენტი ვარ", prompt: "სტუდენტი ვარ. გადავადება როგორ მუშაობს?" },
+          { label: "სამედიცინო საფუძველი", prompt: "სამედიცინო გათავისუფლების პროცედურა მითხარით." },
+          { label: "საბუთები", prompt: "გადავადებისა და გათავისუფლებისთვის რა საბუთებია საჭირო?" },
+        ]
+        : [
+          { label: "I am a student", prompt: "I am a student. How does deferral work?" },
+          { label: "Medical ground", prompt: "Explain the medical exemption process." },
+          { label: "Documents", prompt: "What documents are needed for deferral and exemption?" },
+        ],
+    };
+  }
+
   const ka: Record<JourneyId, Array<{ label: string; prompt: string }>> = {
     mandatory_service: [
-      { label: "რა დოკუმენტები მჭირდება?", prompt: "სავალდებულო სამსახურისთვის რა დოკუმენტები მჭირდება?" },
-      { label: "როდის იწყება გაწვევა?", prompt: "გაწვევა როდის იწყება?" },
-      { label: "ჯარიმა რამდენია?", prompt: "გამოუცხადებლობის ჯარიმა რამდენია?" },
+      { label: "საბუთები", prompt: "სავალდებულო სამსახურისთვის რა დოკუმენტები მჭირდება?" },
+      { label: "გაწვევა", prompt: "გაწვევა როდის იწყება?" },
+      { label: "ჯარიმა", prompt: "გამოუცხადებლობის ჯარიმა რამდენია?" },
     ],
     deferral: [
-      { label: "სტუდენტური გადავადება", prompt: "სტუდენტური გადავადების პირობები მითხარით." },
-      { label: "ფასიანი გადავადება", prompt: "ფასიანი გადავადების პირობები მითხარით." },
-      { label: "რა საბუთებია საჭირო?", prompt: "გადავადებისთვის რა საბუთებია საჭირო?" },
+      { label: "სტუდენტი ვარ", prompt: "სტუდენტი ვარ. გადავადება როგორ მუშაობს?" },
+      { label: "ფასიანი ვარიანტი", prompt: "ფასიანი გადავადების პირობები მითხარით." },
+      { label: "საბუთები", prompt: "გადავადებისთვის რა საბუთებია საჭირო?" },
     ],
     exemption: [
       { label: "სამედიცინო კომისია", prompt: "სამედიცინო კომისიის პროცესი მითხარით." },
@@ -1380,23 +1688,23 @@ function buildFollowUpChips(
     ],
     contract_service: [
       { label: "ხელფასი", prompt: "საკონტრაქტო სამსახურის ხელფასი რა არის?" },
-      { label: "რა პირობებია?", prompt: "საკონტრაქტო სამსახურის პირობები მითხარით." },
-      { label: "რა საბუთებია საჭირო?", prompt: "საკონტრაქტო სამსახურისთვის რა საბუთებია საჭირო?" },
+      { label: "მოთხოვნები", prompt: "საკონტრაქტო სამსახურის მოთხოვნები მითხარით." },
+      { label: "საბუთები", prompt: "საკონტრაქტო სამსახურისთვის რა საბუთებია საჭირო?" },
     ],
     reserve: [
       { label: "რეზერვის ვადა", prompt: "რეზერვში რამდენ ხანს ვრჩები?" },
-      { label: "შეკრება რამდენია?", prompt: "რეზერვის სასწავლო შეკრება რამდენ ხანს გრძელდება?" },
+      { label: "სასწავლო შეკრება", prompt: "რეზერვის სასწავლო შეკრება რამდენ ხანს გრძელდება?" },
       { label: "მობილიზაცია", prompt: "მობილიზაციის დროს რა ვალდებულება მაქვს?" },
     ],
     diaspora: [
       { label: "ორმაგი მოქალაქეობა", prompt: "ორმაგი მოქალაქეობა სამხედრო ვალდებულებას მიხსნის?" },
       { label: "მოქალაქეობის უარყოფა", prompt: "მოქალაქეობის უარყოფა შემიძლია?" },
-      { label: "უცხოეთიდან რა ვქნა?", prompt: "საზღვარგარეთ ვარ და რა უნდა გავაკეთო?" },
+      { label: "შემდეგი ნაბიჯი", prompt: "საზღვარგარეთ ვარ და რა უნდა გავაკეთო?" },
     ],
     alternative_service: [
       { label: "ხანგრძლივობა", prompt: "ალტერნატიული სამსახური რამდენი თვეა?" },
-      { label: "რა სფეროებია?", prompt: "ალტერნატიული სამსახურის სფეროები მითხარით." },
-      { label: "რა საბუთებია საჭირო?", prompt: "ალტერნატიული სამსახურისთვის რა საბუთებია საჭირო?" },
+      { label: "სფეროები", prompt: "ალტერნატიული სამსახურის სფეროები მითხარით." },
+      { label: "საბუთები", prompt: "ალტერნატიული სამსახურისთვის რა საბუთებია საჭირო?" },
     ],
     contact: [
       { label: "ცხელი ხაზი", prompt: "სამინისტროს ცხელი ხაზის ნომერი მომწერეთ." },
@@ -1406,24 +1714,24 @@ function buildFollowUpChips(
     general: [
       { label: "გადავადება", prompt: "გადავადების პირობები მითხარით." },
       { label: "გათავისუფლება", prompt: "გათავისუფლების პირობები მითხარით." },
-      { label: "საკონტრაქტო სამსახური", prompt: "საკონტრაქტო სამსახურის პირობები მითხარით." },
+      { label: "საკონტრაქტო", prompt: "საკონტრაქტო სამსახურის პირობები მითხარით." },
     ],
   };
 
   const en: Record<JourneyId, Array<{ label: string; prompt: string }>> = {
     mandatory_service: [
-      { label: "Required documents", prompt: "What documents are required for mandatory service?" },
-      { label: "Call-up date", prompt: "When does the call-up start?" },
+      { label: "Documents", prompt: "What documents are required for mandatory service?" },
+      { label: "Call-up", prompt: "When does the call-up start?" },
       { label: "Penalty", prompt: "What is the penalty for not appearing?" },
     ],
     deferral: [
-      { label: "Student deferral", prompt: "Tell me about student deferral." },
-      { label: "Paid deferral", prompt: "Tell me about paid deferral." },
-      { label: "Required documents", prompt: "What documents are needed for deferral?" },
+      { label: "I am a student", prompt: "I am a student. How does deferral work?" },
+      { label: "Paid option", prompt: "Tell me about paid deferral." },
+      { label: "Documents", prompt: "What documents are needed for deferral?" },
     ],
     exemption: [
       { label: "Medical commission", prompt: "Explain the medical commission process." },
-      { label: "Fitness categories", prompt: "What are the medical fitness categories?" },
+      { label: "Categories", prompt: "What are the medical fitness categories?" },
       { label: "Foreign service", prompt: "Does foreign military service qualify for exemption?" },
     ],
     contract_service: [
@@ -1460,6 +1768,7 @@ function buildFollowUpChips(
 
   return {
     type: "follow_up_chips",
+    title: t(language, "თუ გსურთ, აქედან გავაგრძელოთ:", "If you want, we can continue with:"),
     items: language === "ka" ? ka[journey] : en[journey],
   };
 }
@@ -1473,28 +1782,29 @@ export function buildGuidanceMetadata(
   language: ChatLanguage,
 ): { journey: JourneyId; blocks: GuidanceBlock[] } {
   const profile = extractProfile(messages);
-  const journey = detectJourney(messages, profile);
+  const context = buildGuidanceContext(messages, profile);
+  const journey = detectJourney(messages, profile, context);
 
   const blocks = (() => {
     switch (journey) {
       case "mandatory_service":
-        return buildMandatoryGuidance(profile, language);
+        return buildMandatoryGuidance(profile, language, context);
       case "deferral":
-        return buildDeferralGuidance(profile, language);
+        return buildDeferralGuidance(profile, language, context);
       case "exemption":
-        return buildExemptionGuidance(profile, language);
+        return buildExemptionGuidance(profile, language, context);
       case "contract_service":
-        return buildContractGuidance(profile, language);
+        return buildContractGuidance(profile, language, context);
       case "reserve":
-        return buildReserveGuidance(profile, language);
+        return buildReserveGuidance(profile, language, context);
       case "diaspora":
-        return buildDiasporaGuidance(profile, language);
+        return buildDiasporaGuidance(profile, language, context);
       case "alternative_service":
-        return buildAlternativeGuidance(profile, language);
+        return buildAlternativeGuidance(profile, language, context);
       case "contact":
-        return buildContactGuidance(profile, language);
+        return buildContactGuidance(profile, language, context);
       default:
-        return buildGeneralGuidance(profile, language);
+        return buildGeneralGuidance(profile, language, context);
     }
   })();
 
