@@ -797,6 +797,9 @@ function App() {
       setIsThinking(false);
       if (flushTimerRef.current) { clearTimeout(flushTimerRef.current); flushTimerRef.current = null; }
       pendingChunksRef.current = [];
+      // fetch rejects with TypeError when the backend host is unreachable
+      // (e.g. the Supabase project is paused), before any HTTP response.
+      const isUnreachable = err instanceof TypeError;
       setMessages(p => {
         const base = p[p.length - 1]?.role === "ai-stream"
           ? [...p.slice(0, -1), { ...p[p.length - 1], role: "ai" }]
@@ -804,8 +807,12 @@ function App() {
         return [...base, {
           role: "ai",
           text: activeLang === "ka"
-            ? "\u10D9\u10D0\u10D5\u10E8\u10D8\u10E0\u10D8\u10E1 \u10E8\u10D4\u10EA\u10D3\u10DD\u10DB\u10D0. \u10D2\u10D7\u10EE\u10DD\u10D5\u10D7 \u10E1\u10EA\u10D0\u10D3\u10DD\u10D7 \u10D7\u10D0\u10D5\u10D8\u10D3\u10D0\u10DC."
-            : "Sorry, something went wrong. Please try again.",
+            ? (isUnreachable
+              ? "\u10D0\u10E1\u10D8\u10E1\u10E2\u10D4\u10DC\u10E2\u10D8\u10E1 \u10E1\u10D4\u10E0\u10D5\u10D8\u10E1\u10D8 \u10D0\u10DB\u10DF\u10D0\u10DB\u10D0\u10D3 \u10DB\u10D8\u10E3\u10EC\u10D5\u10D3\u10DD\u10DB\u10D4\u10DA\u10D8\u10D0. \u10D2\u10D7\u10EE\u10DD\u10D5\u10D7, \u10E1\u10EA\u10D0\u10D3\u10DD\u10D7 \u10DB\u10DD\u10D2\u10D5\u10D8\u10D0\u10DC\u10D4\u10D1\u10D8\u10D7."
+              : "\u10D9\u10D0\u10D5\u10E8\u10D8\u10E0\u10D8\u10E1 \u10E8\u10D4\u10EA\u10D3\u10DD\u10DB\u10D0. \u10D2\u10D7\u10EE\u10DD\u10D5\u10D7 \u10E1\u10EA\u10D0\u10D3\u10DD\u10D7 \u10D7\u10D0\u10D5\u10D8\u10D3\u10D0\u10DC.")
+            : (isUnreachable
+              ? "The assistant service is currently unreachable. Please try again later."
+              : "Sorry, something went wrong. Please try again."),
           ts: Date.now(),
           error: true,
           blocks: [],
