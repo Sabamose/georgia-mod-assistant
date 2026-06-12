@@ -1,6 +1,26 @@
-# Nika Demo Cheatsheet — 10 Scenarios
+# Nika Demo Cheatsheet
 
 Use these scripts to demonstrate Nika's capabilities. Each scenario covers a different audience and topic.
+
+---
+
+## ⭐ Showpiece: Appointment Booking (run this one live)
+
+Nika books a visit to a military registration center inside the conversation and finishes with a confirmation card — booking reference, resolved center address, and an "Add to calendar" button. (Booking is simulated for the demo.)
+
+**Georgian flow:**
+1. **User:** მინდა საკონტრაქტო სამსახურზე განაცხადის შეტანა. შეიძლება ვიზიტის დაჯავშნა?
+2. Nika asks for name → answer: გიორგი ბერიძე
+3. Nika asks city → answer: ბათუმი
+4. Nika asks date/time → answer: სამშაბათს 11:00-ზე
+5. Nika confirms in one sentence → answer: დიახ
+6. **Expected:** short confirmation + booking card (MOD-XXXXXX reference, Batumi center address, .ics download).
+
+**English flow:** "I want to apply for contract service. Can I book a visit?" → name → city → time → "yes" → card.
+
+**Edge to show off:** ask for Saturday or 20:00 — Nika proposes the nearest slot within working hours (Mon–Fri 09:00–18:00) instead of booking it.
+
+---
 
 ---
 

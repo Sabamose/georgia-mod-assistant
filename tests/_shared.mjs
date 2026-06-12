@@ -50,32 +50,21 @@ export function parseDotEnvFile(relativePath = ".env") {
 
 export function getEdgeConfig() {
   const envFile = parseDotEnvFile();
-  const supabaseUrl = process.env.VITE_SUPABASE_URL || envFile.VITE_SUPABASE_URL;
-  const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || envFile.VITE_SUPABASE_ANON_KEY;
+  const chatApiUrl = process.env.CHAT_API_URL || envFile.CHAT_API_URL ||
+    "http://localhost:5173/api/chat";
 
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in environment or .env");
-  }
-
-  return {
-    supabaseUrl,
-    supabaseAnonKey,
-    edgeUrl: `${supabaseUrl.replace(/\/$/, "")}/functions/v1/chat`,
-  };
+  return { edgeUrl: chatApiUrl };
 }
 
 export async function askEdgeChat(prompt, options = {}) {
-  const { language = "ka", origin = "http://localhost:5173", messages } = options;
-  const { edgeUrl, supabaseAnonKey } = getEdgeConfig();
+  const { language = "ka", messages } = options;
+  const { edgeUrl } = getEdgeConfig();
   const payloadMessages = messages || [{ role: "user", content: prompt }];
 
   const response = await fetch(edgeUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${supabaseAnonKey}`,
-      "apikey": supabaseAnonKey,
-      "Origin": origin,
     },
     body: JSON.stringify({
       messages: payloadMessages,

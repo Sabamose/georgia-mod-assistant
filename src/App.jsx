@@ -2,15 +2,8 @@ import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import "./App.css";
 import { buildCenterLookupConversation, getCenterLookupReply } from "./centerLookup.js";
 
-const SUPABASE_URL = String(import.meta.env.VITE_SUPABASE_URL || "").trim();
-const SUPABASE_ANON_KEY = String(import.meta.env.VITE_SUPABASE_ANON_KEY || "").trim();
+const CHAT_API_URL = "/api/chat";
 const THINKING_MIN_MS = 800;
-
-function getClientConfigError(language) {
-  return language === "ka"
-    ? "დემო ჯერ არ არის კონფიგურირებული. აკლია Supabase-ის საჯარო პარამეტრები."
-    : "This demo is not configured yet. Public Supabase settings are missing.";
-}
 
 /* Inline SVG flags — emoji flags don't render on Windows */
 const FlagEN = () => (
@@ -161,126 +154,62 @@ function getSafeHref(href, options = {}) {
   }
 }
 
-/* Pre-process paragraph text */
-function preprocessText(text) {
-  if (!text) return text;
-  if (/^[\s]*[-•]\s+/m.test(text) || /^[\s]*\d+[.)]\s+/m.test(text)) return text;
-  const lines = text.split("\n");
-  const result = [];
-  for (const line of lines) {
-    const colonListMatch = line.match(/^(.+?:\s*)(.+,\s+.+)/);
-    if (colonListMatch) {
-      const intro = colonListMatch[1].trim();
-      const rest = colonListMatch[2];
-      const items = rest.split(/,\s+/).flatMap(s => s.split(/\s+and\s+|\s+და\s+/));
-      if (items.length >= 2) {
-        result.push(intro);
-        for (const item of items) {
-          const cleaned = item.replace(/\.\s*$/, "").trim();
-          if (cleaned) result.push(`- ${cleaned}`);
-        }
-        continue;
-      }
-    }
-    const sentences = line.split(/(?<=\.)\s+/).filter(s => s.trim());
-    if (sentences.length >= 3 && !line.startsWith("#")) {
-      for (const s of sentences) result.push(`- ${s.replace(/\.\s*$/, "")}`);
-      continue;
-    }
-    result.push(line);
-  }
-  return result.join("\n");
+/* Appointment .ics export */
+function icsEscape(value) {
+  return String(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,")
+    .replace(/\n/g, "\\n");
 }
 
-function normalizeComparableText(text) {
-  return (text || "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
+function addMinutesToTime(time, minutes) {
+  const [h, m] = time.split(":").map(Number);
+  const total = h * 60 + m + minutes;
+  const endH = Math.floor(total / 60) % 24;
+  const endM = total % 60;
+  return `${String(endH).padStart(2, "0")}:${String(endM).padStart(2, "0")}`;
 }
 
-function getStructuredTextSet(blocks) {
-  const values = new Set();
+function buildIcsContent(block) {
+  const { ics, reference } = block;
+  const compact = (date, time) => `${date.replace(/-/g, "")}T${time.replace(":", "")}00`;
+  const endTime = addMinutesToTime(ics.time, ics.durationMinutes || 30);
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 
-  for (const block of blocks || []) {
-    if (block.type === "summary" && block.text) {
-      values.add(normalizeComparableText(block.text));
-    }
-
-    if (block.type === "verification_note" && Array.isArray(block.items)) {
-      for (const item of block.items) {
-        values.add(normalizeComparableText(item));
-      }
-    }
-  }
-
-  return values;
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//MOD Georgia//Nika//EN",
+    "BEGIN:VEVENT",
+    `UID:${reference}@mod.gov.ge`,
+    `DTSTAMP:${stamp}`,
+    `DTSTART;TZID=Asia/Tbilisi:${compact(ics.date, ics.time)}`,
+    `DTEND;TZID=Asia/Tbilisi:${compact(ics.date, endTime)}`,
+    `SUMMARY:${icsEscape(ics.summary)}`,
+    ics.location ? `LOCATION:${icsEscape(ics.location)}` : null,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].filter(Boolean).join("\r\n");
 }
 
-function isLowValuePreamble(paragraph, structuredTexts) {
-  const normalized = normalizeComparableText(paragraph);
-  if (!normalized) return true;
-  if (structuredTexts.has(normalized)) return true;
-
-  const bannedLeadPatterns = [
-    /^(სტატუსი|შედეგი|დასკვნა)\s*:/i,
-    /^(status|result|conclusion)\s*:/i,
-    /^ინფორმაციის მიხედვით[, ]/i,
-    /^მოკლედ[, ]/i,
-    /^ზოგადად[, ]/i,
-    /^based on the information[, ]/i,
-    /^in summary[, ]/i,
-    /^generally[, ]/i,
-  ];
-
-  if (bannedLeadPatterns.some((pattern) => pattern.test(paragraph.trim()))) {
-    return true;
-  }
-
-  const bannedGenericPatterns = [
-    /დამატებითი მოქმედება არ არის საჭირო/i,
-    /no further action is required/i,
-  ];
-
-  return bannedGenericPatterns.some((pattern) => pattern.test(paragraph));
-}
-
-function getRenderableAssistantText(message) {
-  const rawText = (message?.text || "")
-    .replace(/\+995\s*\(?\d{2,3}\)?\s*\d{3}\s*\d{2}\s*\d{2}/g, "")
-    .trim();
-
-  if (!rawText) return "";
-
-  const blocks = Array.isArray(message?.blocks) ? message.blocks : [];
-  if (blocks.length === 0) return rawText;
-
-  const paragraphs = rawText
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
-
-  if (paragraphs.length === 0) return "";
-
-  const structuredTexts = getStructuredTextSet(blocks);
-  let firstUsefulIndex = 0;
-  while (
-    firstUsefulIndex < paragraphs.length &&
-    isLowValuePreamble(paragraphs[firstUsefulIndex], structuredTexts)
-  ) {
-    firstUsefulIndex += 1;
-  }
-
-  const cleaned = paragraphs.slice(firstUsefulIndex).join("\n\n").trim();
-  return cleaned;
+function downloadAppointmentIcs(block) {
+  const blob = new Blob([buildIcsContent(block)], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `mod-appointment-${block.reference}.ics`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
 /* Markdown renderer */
 function RichText({ text }) {
   const elements = useMemo(() => {
     if (!text) return null;
-    const processed = preprocessText(text);
-    const lines = processed.split("\n");
+    const lines = text.split("\n");
     const result = [];
     let listItems = [];
     const flushList = () => { if (listItems.length) { result.push(<ul key={`ul-${result.length}`} className="rich-list">{listItems.map((item, j) => <li key={j}>{inlineFormat(item)}</li>)}</ul>); listItems = []; } };
@@ -547,6 +476,42 @@ function GuidanceBlocks({ blocks, onQuickReply, language }) {
           );
         }
 
+        if (block.type === "appointment_card") {
+          return (
+            <div key={key} className="guidance-card appointment-card">
+              <div className="appointment-head">
+                <span className="appointment-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div className="appointment-head-copy">
+                  <span className="appointment-title">{block.title}</span>
+                  <span className="appointment-ref">{block.referenceLabel}: <strong>{block.reference}</strong></span>
+                </div>
+              </div>
+              <div className="guidance-handoff-fields">
+                {block.fields.map((field, fieldIndex) => (
+                  <div key={`${field.label}-${fieldIndex}`} className="guidance-handoff-field">
+                    <span className="guidance-handoff-label">{field.label}</span>
+                    <span className="guidance-handoff-value">{field.value}</span>
+                  </div>
+                ))}
+              </div>
+              {block.note ? <p className="appointment-note">{block.note}</p> : null}
+              <div className="guidance-center-actions">
+                <button
+                  type="button"
+                  className="guidance-center-action guidance-center-action-primary"
+                  onClick={() => downloadAppointmentIcs(block)}
+                >
+                  {block.icsLabel}
+                </button>
+              </div>
+            </div>
+          );
+        }
+
         if (block.type === "follow_up_chips") {
           return (
             <div key={key} className="guidance-follow-ups">
@@ -565,21 +530,6 @@ function GuidanceBlocks({ blocks, onQuickReply, language }) {
 
         return null;
       })}
-    </div>
-  );
-}
-
-function ContactCard({ text }) {
-  const ph = text.match(/\+995\s*\(?\d{2,3}\)?\s*\d{3}\s*\d{2}\s*\d{2}/);
-  const em = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  if (!ph && !em) return null;
-  return (
-    <div className="contact-card">
-      <div className="contact-card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Contact</div>
-      <div className="contact-card-items">
-        {ph && <a href={`tel:+${ph[0].replace(/\D/g,"")}`} className="contact-card-item"><span className="contact-card-icon">{"\u{1F4DE}"}</span><span>{ph[0]}</span></a>}
-        {em && <a href={`mailto:${em[0]}`} className="contact-card-item"><span className="contact-card-icon">{"\u2709\uFE0F"}</span><span>{em[0]}</span></a>}
-      </div>
     </div>
   );
 }
@@ -694,25 +644,10 @@ function App() {
       .slice(-40)
       .map(m => ({ role: m.role === "user" ? "user" : "assistant", content: m.text }));
 
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      setIsThinking(false);
-      setMessages(p => [...p, {
-        role: "ai",
-        text: getClientConfigError(activeLang),
-        ts: Date.now(),
-        error: true,
-      }]);
-      return;
-    }
-
     try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/chat`, {
+      const res = await fetch(CHAT_API_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-          "apikey": SUPABASE_ANON_KEY,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: apiMessages, language: activeLang }),
         signal: controller.signal,
       });
@@ -1081,15 +1016,10 @@ function App() {
                     <div className="msg-content">
                       {msg.role === "user" ? msg.text : (
                         <>
-                          {(msg.role !== "ai" || getRenderableAssistantText(msg)) && (
-                            <RichText text={msg.role === "ai" ? getRenderableAssistantText(msg) : msg.text} />
-                          )}
+                          <RichText text={msg.text} />
                           {msg.role === "ai-stream" && <span className="stream-cursor" />}
                           {msg.role === "ai" && Array.isArray(msg.blocks) && msg.blocks.length > 0 && (
                             <GuidanceBlocks blocks={msg.blocks} onQuickReply={handleQuickReply} language={lang} />
-                          )}
-                          {msg.role === "ai" && (!Array.isArray(msg.blocks) || !msg.blocks.some(block => block.type === "contact_card")) && (
-                            <ContactCard text={msg.text} />
                           )}
                         </>
                       )}

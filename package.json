@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:kb": "node scripts/build-knowledge.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test:unit": "node --test tests/*.test.mjs",
     "test:stress": "node tests/stress-test-georgian.mjs",
     "test:quality": "node tests/georgian-quality-check.mjs",
     "test:providers": "node tests/compare-providers.mjs",
