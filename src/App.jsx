@@ -32,8 +32,8 @@ const FlagKA = () => (
 );
 
 const LANGUAGES = [
-  { code: "ka", displayCode: "GE", label: "\u10E5\u10D0\u10E0\u10D7\u10E3\u10DA\u10D8", Flag: FlagKA },
-  { code: "en", displayCode: "EN", label: "English", Flag: FlagEN },
+  { code: "ka", label: "\u10E5\u10D0\u10E0\u10D7\u10E3\u10DA\u10D8", Flag: FlagKA },
+  { code: "en", label: "English", Flag: FlagEN },
 ];
 
 const T = {
@@ -614,7 +614,6 @@ function App() {
   const [lang, setLang] = useState("ka");
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   // Chat state
   const [messages, setMessages] = useState([]);
@@ -679,26 +678,6 @@ function App() {
 
   useEffect(() => { if (!langMenuOpen) return; const h = () => setLangMenuOpen(false); document.addEventListener("click", h); return () => document.removeEventListener("click", h); }, [langMenuOpen]);
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isThinking]);
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-
-    const mediaQuery = window.matchMedia("(max-width: 768px), (max-height: 720px) and (pointer: coarse)");
-    const syncExpandedState = () => {
-      if (mediaQuery.matches) {
-        setIsExpanded(false);
-      }
-    };
-
-    syncExpandedState();
-
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", syncExpandedState);
-      return () => mediaQuery.removeEventListener("change", syncExpandedState);
-    }
-
-    mediaQuery.addListener(syncExpandedState);
-    return () => mediaQuery.removeListener(syncExpandedState);
-  }, []);
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
 
@@ -1140,7 +1119,7 @@ function App() {
 
       {/* Widget */}
       <div className={`widget-host ${isOpen ? "widget-open" : ""}`}>
-        <div className={`panel ${isOpen ? "open" : ""} ${isExpanded ? "panel-expanded" : ""}`}>
+        <div className={`panel ${isOpen ? "open" : ""}`}>
           {/* Header */}
           <div className="panel-header">
             <div className="panel-header-left">
@@ -1171,31 +1150,16 @@ function App() {
                 <span className="voice-call-label">{isVoiceActive ? t.endVoiceCallLabel : t.voiceCallLabel}</span>
               </button>
               <div className="lang-selector">
-                <button className="lang-trigger-btn" onClick={(e) => { e.stopPropagation(); setLangMenuOpen(v => !v); }}><span className="lang-flag"><currentLang.Flag /></span><span className="lang-code">{currentLang.displayCode}</span></button>
+                <button
+                  className="lang-trigger-btn"
+                  onClick={(e) => { e.stopPropagation(); setLangMenuOpen(v => !v); }}
+                  aria-label={currentLang.label}
+                  title={currentLang.label}
+                >
+                  <span className="lang-flag"><currentLang.Flag /></span>
+                </button>
                 {langMenuOpen && <div className="lang-menu">{LANGUAGES.map(l => <button key={l.code} className={`lang-option ${l.code === lang ? "active" : ""}`} onClick={() => handleLangChange(l.code)}><span className="lang-flag"><l.Flag /></span><span className="lang-label">{l.label}</span></button>)}</div>}
               </div>
-              <button
-                className={`header-action-btn header-expand-btn ${isExpanded ? "active" : ""}`}
-                onClick={() => setIsExpanded(v => !v)}
-                aria-label={isExpanded ? (lang === "ka" ? "შემცირება" : "Collapse widget") : (lang === "ka" ? "გაფართოება" : "Expand widget")}
-                title={isExpanded ? (lang === "ka" ? "შემცირება" : "Collapse widget") : (lang === "ka" ? "გაფართოება" : "Expand widget")}
-              >
-                {isExpanded ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="14 10 14 5 19 5" />
-                    <line x1="14" y1="10" x2="20" y2="4" />
-                    <polyline points="10 14 10 19 5 19" />
-                    <line x1="10" y1="14" x2="4" y2="20" />
-                  </svg>
-                ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="14" y1="10" x2="21" y2="3" />
-                    <polyline points="9 21 3 21 3 15" />
-                    <line x1="10" y1="14" x2="3" y2="21" />
-                  </svg>
-                )}
-              </button>
             </div>
           </div>
 
