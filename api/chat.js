@@ -1,5 +1,7 @@
 import { buildSystemPrompt } from "./_lib/prompt.js";
 import {
+  getEnvDiagnostics,
+  getEnvValue,
   hasProviderKey,
   ProviderError,
   streamAnthropicChat,
@@ -10,6 +12,8 @@ import {
   createMarkerSplitter,
   parseAppointmentPayload,
 } from "./_lib/appointment.js";
+import { buildAppointmentIntakeReply } from "./_lib/appointment-intake.js";
+import { buildResponseBlocks } from "./_lib/response-blocks.js";
 
 const VALID_ROLES = new Set(["user", "assistant"]);
 const MAX_MESSAGE_LENGTH = 4000;
@@ -130,7 +134,7 @@ function consumeRateLimit(req) {
 }
 
 function getConfiguredProvider(envName, defaultValue) {
-  const value = process.env[envName]?.trim();
+  const value = getEnvValue(envName);
   return value === "openai" || value === "anthropic" ? value : defaultValue;
 }
 
@@ -176,10 +180,10 @@ function beginSse(res) {
   if (typeof res.flushHeaders === "function") res.flushHeaders();
 }
 
-function endWithMessage(res, language, text) {
+function endWithMessage(res, language, text, { blocks = [], journey = null } = {}) {
   beginSse(res);
   writeTextDelta(res, text || streamErrorMessage(language));
-  writeSseEvent(res, { type: "message_stop", journey: null, blocks: [] });
+  writeSseEvent(res, { type: "message_stop", journey, blocks });
   res.end();
 }
 
@@ -225,11 +229,31 @@ export default async function handler(req, res) {
       return;
     }
 
+    const appointmentIntakeReply = buildAppointmentIntakeReply(messages, language);
+    if (appointmentIntakeReply) {
+      logEvent({
+        event: "chat_appointment_intake",
+        request_id: requestId,
+        journey: appointmentIntakeReply.journey,
+      });
+      endWithMessage(res, language, appointmentIntakeReply.text, {
+        blocks: appointmentIntakeReply.blocks,
+        journey: appointmentIntakeReply.journey,
+      });
+      return;
+    }
+
     const primaryProvider = getConfiguredProvider("AI_PROVIDER", "openai");
     const fallbackProvider = getConfiguredProvider("AI_FALLBACK_PROVIDER", "anthropic");
 
     if (!hasProviderKey(primaryProvider) && !hasProviderKey(fallbackProvider)) {
-      logEvent({ event: "chat_config_missing", request_id: requestId });
+      logEvent({
+        event: "chat_config_missing",
+        request_id: requestId,
+        primary_provider: primaryProvider,
+        fallback_provider: fallbackProvider,
+        diagnostics: getEnvDiagnostics(),
+      });
       endWithMessage(res, language, configMissingMessage(language));
       return;
     }
@@ -269,12 +293,14 @@ export default async function handler(req, res) {
     const splitter = createMarkerSplitter();
     let emittedAnyText = false;
     let streamFailed = false;
+    const assistantTextParts = [];
 
     try {
       for await (const chunk of result.textStream) {
         const visible = splitter.push(chunk);
         if (visible) {
           emittedAnyText = true;
+          assistantTextParts.push(visible);
           writeTextDelta(res, visible);
         }
       }
@@ -294,6 +320,7 @@ export default async function handler(req, res) {
     const { text: tailText, payload } = splitter.flush();
     if (tailText) {
       emittedAnyText = true;
+      assistantTextParts.push(tailText);
       writeTextDelta(res, tailText);
     }
 
@@ -316,6 +343,15 @@ export default async function handler(req, res) {
       writeTextDelta(res, streamErrorMessage(language));
     }
 
+    if (!streamFailed) {
+      blocks = buildResponseBlocks({
+        messages,
+        assistantText: assistantTextParts.join(""),
+        language,
+        existingBlocks: blocks,
+      });
+    }
+
     writeSseEvent(res, { type: "message_stop", journey: null, blocks });
     res.end();
 
@@ -326,7 +362,7 @@ export default async function handler(req, res) {
       model: result.model,
       latency_ms: Date.now() - startedAt,
       fallback_used: fallbackUsed,
-      appointment: blocks.length > 0,
+      appointment: blocks.some((block) => block.type === "appointment_card"),
     });
   } catch (error) {
     const statusCode = error instanceof ProviderError ? 502 : 500;

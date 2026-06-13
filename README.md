@@ -68,16 +68,18 @@ npm run build
 
 ### Environment Variables
 
-Set these in Vercel → Project → Settings → Environment Variables (and in a local `.env` for `npm run dev`):
+Set these in Vercel → Project → Settings → Environment Variables for the same project that owns `georgia-mod-assistant.vercel.app`. `OPENAI_API_KEY` must be enabled for the **Production** environment, then the project needs a fresh production redeploy. Use a local `.env` for `npm run dev`.
 
 ```
 OPENAI_API_KEY=...            # required
 ANTHROPIC_API_KEY=...         # optional — enables automatic fallback
-OPENAI_MODEL=gpt-5.4-2026-03-05          # optional override
+OPENAI_MODEL=gpt-5.4          # optional override
 ANTHROPIC_MODEL=claude-sonnet-4-5-20250929  # optional override
 AI_PROVIDER=openai            # optional: openai | anthropic
 AI_FALLBACK_PROVIDER=anthropic
 ```
+
+If you only have an OpenAI key, leave `AI_PROVIDER` unset or set it to `openai`. Do not set `AI_PROVIDER=anthropic` unless `ANTHROPIC_API_KEY` is also configured, or set `AI_FALLBACK_PROVIDER=openai`.
 
 No client-side env vars are needed — the widget calls its own origin.
 

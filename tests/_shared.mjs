@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, "..");
-const EDGE_OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5.4-2026-03-05";
+const EDGE_OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5.4";
 const EDGE_ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5-20250929";
 
 export const GEORGIAN_BOUNDARY_KEYWORDS = [

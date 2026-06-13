@@ -1,8 +1,22 @@
 const OPENAI_URL = "https://api.openai.com/v1/responses";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const DEFAULT_OPENAI_MODEL = "gpt-5.4-2026-03-05";
+const DEFAULT_OPENAI_MODEL = "gpt-5.4";
 const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-5-20250929";
 const DEFAULT_TIMEOUT_MS = 45_000;
+
+const PROVIDER_ENV_NAMES = {
+  openai: "OPENAI_API_KEY",
+  anthropic: "ANTHROPIC_API_KEY",
+};
+
+const DIAGNOSTIC_ENV_NAMES = [
+  "OPENAI_API_KEY",
+  "ANTHROPIC_API_KEY",
+  "OPENAI_MODEL",
+  "ANTHROPIC_MODEL",
+  "AI_PROVIDER",
+  "AI_FALLBACK_PROVIDER",
+];
 
 export class ProviderError extends Error {
   constructor(message, { provider, retryable = false, statusCode = null, model = null, details = null, missingKey = false } = {}) {
@@ -17,13 +31,60 @@ export class ProviderError extends Error {
   }
 }
 
+export function getEnvValue(name) {
+  const exact = process.env[name];
+  if (typeof exact === "string" && exact.trim()) return exact.trim();
+
+  for (const [key, value] of Object.entries(process.env)) {
+    if (key !== name && key.trim() === name && typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+
+  return "";
+}
+
+function hasEnvNameNearMiss(name) {
+  return Object.keys(process.env).some((key) => key !== name && key.trim() === name);
+}
+
 export function hasProviderKey(provider) {
-  const name = provider === "anthropic" ? "ANTHROPIC_API_KEY" : "OPENAI_API_KEY";
-  return Boolean(process.env[name]?.trim());
+  return Boolean(getEnvValue(PROVIDER_ENV_NAMES[provider] || PROVIDER_ENV_NAMES.openai));
+}
+
+export function getEnvDiagnostics() {
+  const diagnostics = {
+    providers: {
+      openai: hasProviderKey("openai"),
+      anthropic: hasProviderKey("anthropic"),
+    },
+    exact: {},
+    nearMiss: {},
+    values: {
+      AI_PROVIDER: getEnvValue("AI_PROVIDER") || null,
+      AI_FALLBACK_PROVIDER: getEnvValue("AI_FALLBACK_PROVIDER") || null,
+      OPENAI_MODEL: getEnvValue("OPENAI_MODEL") || null,
+      ANTHROPIC_MODEL: getEnvValue("ANTHROPIC_MODEL") || null,
+    },
+    vercel: {
+      env: process.env.VERCEL_ENV || null,
+      targetEnv: process.env.VERCEL_TARGET_ENV || null,
+      url: process.env.VERCEL_URL || null,
+      gitCommitSha: process.env.VERCEL_GIT_COMMIT_SHA || null,
+      gitCommitRef: process.env.VERCEL_GIT_COMMIT_REF || null,
+    },
+  };
+
+  for (const name of DIAGNOSTIC_ENV_NAMES) {
+    diagnostics.exact[name] = Boolean(process.env[name]?.trim());
+    diagnostics.nearMiss[name] = hasEnvNameNearMiss(name);
+  }
+
+  return diagnostics;
 }
 
 function getRequiredEnv(name, provider, model) {
-  const value = process.env[name]?.trim();
+  const value = getEnvValue(name);
   if (!value) {
     throw new ProviderError(`Missing ${name}`, { provider, model, missingKey: true });
   }
@@ -93,9 +154,9 @@ function assertResponseBody(response, provider, model) {
 }
 
 export async function streamOpenAIChat({ messages, systemPrompt }) {
-  const model = process.env.OPENAI_MODEL?.trim() || DEFAULT_OPENAI_MODEL;
+  const model = getEnvValue("OPENAI_MODEL") || DEFAULT_OPENAI_MODEL;
   const apiKey = getRequiredEnv("OPENAI_API_KEY", "openai", model);
-  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
+  const timeoutMs = Number(getEnvValue("OPENAI_TIMEOUT_MS") || DEFAULT_TIMEOUT_MS);
 
   const response = await fetchWithTimeout(
     OPENAI_URL,
@@ -167,9 +228,9 @@ async function* openAiTextStream(body, model) {
 }
 
 export async function streamAnthropicChat({ messages, systemPrompt }) {
-  const model = process.env.ANTHROPIC_MODEL?.trim() || DEFAULT_ANTHROPIC_MODEL;
+  const model = getEnvValue("ANTHROPIC_MODEL") || DEFAULT_ANTHROPIC_MODEL;
   const apiKey = getRequiredEnv("ANTHROPIC_API_KEY", "anthropic", model);
-  const timeoutMs = Number(process.env.ANTHROPIC_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
+  const timeoutMs = Number(getEnvValue("ANTHROPIC_TIMEOUT_MS") || DEFAULT_TIMEOUT_MS);
 
   const response = await fetchWithTimeout(
     ANTHROPIC_URL,

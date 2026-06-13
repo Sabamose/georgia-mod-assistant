@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import "./App.css";
 import { buildCenterLookupConversation, getCenterLookupReply } from "./centerLookup.js";
+import { getSuggestedReplies } from "./suggestedReplies.js";
 
 const CHAT_API_URL = "/api/chat";
 const THINKING_MIN_MS = 800;
@@ -816,33 +817,7 @@ function App() {
 
   /* Contextual suggested replies */
   const suggestedReplies = useMemo(() => {
-    if (isThinking) return [];
-    const lastMsg = messages[messages.length - 1];
-    if (!lastMsg || lastMsg.role === "user" || lastMsg.role === "ai-stream") return [];
-    if (Array.isArray(lastMsg.blocks) && lastMsg.blocks.some(block => block.type === "follow_up_chips")) return [];
-    const txt = (lastMsg.text || "").toLowerCase();
-    const userCount = messages.filter(m => m.role === "user").length;
-    const isKa = lang === "ka";
-
-    if (userCount === 0) {
-      return isKa
-        ? ["\u10E1\u10D0\u10D5\u10D0\u10DA\u10D3\u10D4\u10D1\u10E3\u10DA\u10DD \u10E1\u10D0\u10DB\u10E1\u10D0\u10EE\u10E3\u10E0\u10D8", "\u10D2\u10D0\u10D3\u10D0\u10D5\u10D0\u10D3\u10D4\u10D1\u10D0", "\u10E1\u10D0\u10D9\u10DD\u10DC\u10E2\u10E0\u10D0\u10E5\u10E2\u10DD \u10E1\u10D0\u10DB\u10E1\u10D0\u10EE\u10E3\u10E0\u10D8", "\u10D8\u10DE\u10DD\u10D5\u10D4 \u10E9\u10D4\u10DB\u10D8 \u10EA\u10D4\u10DC\u10E2\u10E0\u10D8"]
-        : ["Mandatory Service", "Deferrals", "Professional Service", "Find My Center"];
-    }
-
-    if (txt.includes("gel") || txt.includes("\u10DA\u10D0\u10E0") || txt.includes("months") || txt.includes("\u10D7\u10D5\u10D4")) {
-      return isKa
-        ? ["\u10DB\u10D4\u10E2\u10D8 \u10D8\u10DC\u10E4\u10DD\u10E0\u10DB\u10D0\u10EA\u10D8\u10D0", "\u10E1\u10EE\u10D5\u10D0 \u10D7\u10D4\u10DB\u10D0"]
-        : ["Tell me more", "Different topic"];
-    }
-
-    if (txt.includes("?")) {
-      return isKa
-        ? ["\u10D3\u10D8\u10D0\u10EE", "\u10D0\u10E0\u10D0", "\u10DB\u10D4\u10E2\u10D8 \u10D8\u10DC\u10E4\u10DD\u10E0\u10DB\u10D0\u10EA\u10D8\u10D0"]
-        : ["Yes", "No", "Tell me more"];
-    }
-
-    return [];
+    return getSuggestedReplies({ messages, isThinking, language: lang });
   }, [messages, isThinking, lang]);
 
   /* Navigation */
