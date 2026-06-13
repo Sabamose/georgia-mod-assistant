@@ -46,6 +46,7 @@ const T = {
     aiAssistant: "AI Assistant",
     connecting: "Connecting...",
     chatWith: "Chat with Nika",
+    widgetGreeting: "Hi, I'm Nika",
     offline: "Offline",
     typePlaceholder: "Type your message...",
     tryAgain: "Try again",
@@ -80,6 +81,7 @@ const T = {
     aiAssistant: "\u10EA\u10D8\u10E4\u10E0\u10E3\u10DA\u10D8 \u10D0\u10E1\u10D8\u10E1\u10E2\u10D4\u10DC\u10E2\u10D8",
     connecting: "\u10DB\u10D8\u10DB\u10D3\u10D8\u10DC\u10D0\u10E0\u10D4\u10DD\u10D1\u10E1 \u10D9\u10D0\u10D5\u10E8\u10D8\u10E0\u10D8...",
     chatWith: "\u10E9\u10D0\u10E2\u10D8 \u10DC\u10D8\u10D9\u10D0\u10E1\u10D7\u10D0\u10DC",
+    widgetGreeting: "\u10D2\u10D0\u10DB\u10D0\u10E0\u10EF\u10DD\u10D1\u10D0, \u10DB\u10D4 \u10D5\u10D0\u10E0 \u10DC\u10D8\u10D9\u10D0",
     offline: "\u10DD\u10E4\u10DA\u10D0\u10D8\u10DC",
     typePlaceholder: "\u10E8\u10D4\u10D8\u10E7\u10D5\u10D0\u10DC\u10D4\u10D7 \u10E8\u10D4\u10E2\u10E7\u10DD\u10D1\u10D8\u10DC\u10D4\u10D1\u10D0...",
     tryAgain: "\u10D7\u10D0\u10D5\u10D8\u10D3\u10D0\u10DC \u10EA\u10D3\u10D0",
@@ -1299,7 +1301,7 @@ function App() {
         <button className={`collapse-btn ${isOpen ? "visible" : ""}`} onClick={() => setIsOpen(false)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
         <button className={`trigger ${isOpen ? "hidden" : ""} ${isVoiceActive ? "voice-live" : ""}`} onClick={() => setIsOpen(true)}>
           <div className="trigger-avatar-wrap"><img src="/logo.png" alt="MOD" className="trigger-avatar" /></div>
-          <div className="trigger-cta"><svg className="trigger-chat-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" /></svg><span>{isVoiceActive ? t.voiceLive : (lang === "ka" ? "\u10E9\u10D0\u10E2\u10D8 \u10DC\u10D8\u10D9\u10D0\u10E1\u10D7\u10D0\u10DC" : "Chat with Nika")}</span></div>
+          <div className="trigger-cta"><svg className="trigger-chat-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" /></svg><span>{isVoiceActive ? t.voiceLive : t.widgetGreeting}</span></div>
         </button>
       </div>
     </>
