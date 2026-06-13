@@ -181,11 +181,16 @@
 .guidance-handoff-field { display: flex; flex-direction: column; gap: 3px; padding: 10px; border-radius: 10px; background: rgba(45,74,46,.05); border: 1px solid rgba(45,74,46,.08); }
 .guidance-handoff-label { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--mod-text-subtle); }
 .guidance-handoff-value { font-size: 12px; line-height: 1.45; color: var(--mod-text); }
-.guidance-sources { display: flex; flex-direction: column; gap: 8px; }
-.guidance-source-item { display: flex; flex-direction: column; gap: 2px; padding: 10px; border: 1px solid rgba(45,74,46,.1); border-radius: 10px; text-decoration: none; background: var(--mod-bg); transition: all .15s; }
-.guidance-source-item:hover { border-color: rgba(45,74,46,.22); background: var(--mod-primary-pale); }
+.guidance-sources-block { border-left: 3px solid rgba(45,74,46,.24); padding: 2px 0 2px 12px; margin-top: 4px; }
+.guidance-sources-block .guidance-title { margin-bottom: 6px; }
+.guidance-sources { display: flex; flex-direction: column; border-top: 1px solid rgba(45,74,46,.12); }
+.guidance-source-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(45,74,46,.12); text-decoration: none; transition: color .15s; }
+.guidance-source-item:hover .guidance-source-label,
+.guidance-source-item:hover .guidance-source-arrow { color: var(--mod-primary-light); }
+.guidance-source-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .guidance-source-label { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--mod-text-subtle); }
 .guidance-source-detail { font-size: 12px; line-height: 1.45; color: var(--mod-primary); }
+.guidance-source-arrow { flex-shrink: 0; color: var(--mod-primary); font-size: 13px; font-weight: 800; line-height: 1; }
 .guidance-follow-ups { display: flex; flex-wrap: wrap; gap: 6px; }
 
 /* ═══ QUICK ACTION BUTTONS ═══ */

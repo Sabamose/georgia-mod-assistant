@@ -525,7 +525,7 @@ function GuidanceBlocks({ blocks, onQuickReply, language }) {
 
         if (block.type === "sources") {
           return (
-            <div key={key} className="guidance-card">
+            <div key={key} className="guidance-sources-block">
               <div className="guidance-title">{block.title}</div>
               <div className="guidance-sources">
                 {block.items.map((item, itemIndex) => {
@@ -540,8 +540,11 @@ function GuidanceBlocks({ blocks, onQuickReply, language }) {
                       rel="noopener noreferrer"
                       className="guidance-source-item"
                     >
-                      <span className="guidance-source-label">{item.label}</span>
-                      <span className="guidance-source-detail">{item.detail}</span>
+                      <span className="guidance-source-copy">
+                        <span className="guidance-source-label">{item.label}</span>
+                        <span className="guidance-source-detail">{item.detail}</span>
+                      </span>
+                      <span className="guidance-source-arrow" aria-hidden="true">↗</span>
                     </a>
                   );
                 })}
