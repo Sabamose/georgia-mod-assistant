@@ -4,6 +4,7 @@ import { buildCenterLookupConversation, getCenterLookupReply } from "./centerLoo
 import { getSuggestedReplies } from "./suggestedReplies.js";
 
 const CHAT_API_URL = "/api/chat";
+const VOICE_API_URL = "/api/elevenlabs-conversation";
 const THINKING_MIN_MS = 800;
 
 /* Inline SVG flags — emoji flags don't render on Windows */
@@ -58,6 +59,17 @@ const T = {
     centerDesc: "Exact branch address & directions",
     faqTitle: "FAQ",
     faqDesc: "Common questions answered",
+    callNika: "Start voice call",
+    endVoiceCall: "End voice call",
+    voiceConnecting: "Connecting voice...",
+    voiceLive: "Voice call live",
+    voiceListening: "Listening",
+    voiceSpeaking: "Nika is speaking",
+    voiceStartHint: "Speak with Nika by voice.",
+    voiceErrorTitle: "Voice mode unavailable",
+    voiceSetupMissing: "ElevenLabs voice is not configured yet. Add ELEVENLABS_API_KEY and ELEVENLABS_SPEECH_ENGINE_ID in Vercel, then redeploy.",
+    voiceMicDenied: "Microphone access was blocked. Allow microphone access in the browser and try again.",
+    voiceGenericError: "Could not start the voice call. Please try again.",
   },
   ka: {
     welcome: "\u10DB\u10DD\u10D2\u10D4\u10E1\u10D0\u10DA\u10DB\u10D4\u10D1\u10D8\u10D7!",
@@ -81,6 +93,17 @@ const T = {
     centerDesc: "\u10D6\u10E3\u10E1\u10E2\u10D8 \u10DB\u10D8\u10E1\u10D0\u10DB\u10D0\u10E0\u10D7\u10D8 \u10D3\u10D0 \u10D9\u10D5\u10DA\u10D0\u10D5\u10D8",
     faqTitle: "\u10EE\u10E8\u10D8\u10E0\u10D0\u10D3 \u10D3\u10D0\u10E1\u10DB\u10E3\u10DA\u10D8 \u10D9\u10D8\u10D7\u10EE\u10D5\u10D4\u10D1\u10D8",
     faqDesc: "\u10DE\u10D0\u10E1\u10E3\u10EE\u10D4\u10D1\u10D8 \u10D2\u10D0\u10D5\u10E0\u10EA\u10D4\u10DA \u10D9\u10D8\u10D7\u10EE\u10D5\u10D4\u10D1\u10D6\u10D4",
+    callNika: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D6\u10D0\u10E0\u10D8\u10E1 \u10D3\u10D0\u10EC\u10E7\u10D4\u10D1\u10D0",
+    endVoiceCall: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D6\u10D0\u10E0\u10D8\u10E1 \u10D3\u10D0\u10E1\u10E0\u10E3\u10DA\u10D4\u10D1\u10D0",
+    voiceConnecting: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D9\u10D0\u10D5\u10E8\u10D8\u10E0\u10D8...",
+    voiceLive: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D6\u10D0\u10E0\u10D8 \u10DB\u10D8\u10DB\u10D3\u10D8\u10DC\u10D0\u10E0\u10D4\u10DD\u10D1\u10E1",
+    voiceListening: "\u10D2\u10D8\u10E1\u10DB\u10D4\u10DC\u10D7",
+    voiceSpeaking: "\u10DC\u10D8\u10D9\u10D0 \u10D2\u10DE\u10D0\u10E1\u10E3\u10EE\u10DD\u10D1\u10D7",
+    voiceStartHint: "\u10D4\u10E1\u10D0\u10E3\u10D1\u10E0\u10D4\u10D7 \u10DC\u10D8\u10D9\u10D0\u10E1 \u10EE\u10DB\u10D8\u10D7.",
+    voiceErrorTitle: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10E0\u10D4\u10DF\u10D8\u10DB\u10D8 \u10DB\u10D8\u10E3\u10EC\u10D5\u10D3\u10DD\u10DB\u10D4\u10DA\u10D8\u10D0",
+    voiceSetupMissing: "ElevenLabs voice \u10EF\u10D4\u10E0 \u10D0\u10E0 \u10D0\u10E0\u10D8\u10E1 \u10D3\u10D0\u10D9\u10DD\u10DC\u10E4\u10D8\u10D2\u10E3\u10E0\u10D8\u10E0\u10D4\u10D1\u10E3\u10DA\u10D8. Vercel-\u10E8\u10D8 \u10D3\u10D0\u10D0\u10DB\u10D0\u10E2\u10D4\u10D7 ELEVENLABS_API_KEY \u10D3\u10D0 ELEVENLABS_SPEECH_ENGINE_ID, \u10E8\u10D4\u10DB\u10D3\u10D4\u10D2 \u10D2\u10D0\u10DC\u10D0\u10D0\u10EE\u10DA\u10D4\u10D7 deploy.",
+    voiceMicDenied: "\u10DB\u10D8\u10D9\u10E0\u10DD\u10E4\u10DD\u10DC\u10D6\u10D4 \u10EC\u10D5\u10D3\u10DD\u10DB\u10D0 \u10D3\u10D0\u10D8\u10D1\u10DA\u10DD\u10D9\u10D0. \u10D3\u10D0\u10E3\u10E8\u10D5\u10D8\u10D7 \u10DB\u10D8\u10D9\u10E0\u10DD\u10E4\u10DD\u10DC\u10D8 \u10D1\u10E0\u10D0\u10E3\u10D6\u10D4\u10E0\u10E8\u10D8 \u10D3\u10D0 \u10E1\u10EA\u10D0\u10D3\u10D4\u10D7 \u10D7\u10D0\u10D5\u10D8\u10D3\u10D0\u10DC.",
+    voiceGenericError: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D6\u10D0\u10E0\u10D8 \u10D5\u10D4\u10E0 \u10D3\u10D0\u10D8\u10EC\u10E7\u10DD. \u10D2\u10D7\u10EE\u10DD\u10D5\u10D7, \u10E1\u10EA\u10D0\u10D3\u10D4\u10D7 \u10D7\u10D0\u10D5\u10D8\u10D3\u10D0\u10DC.",
   },
 };
 
@@ -204,6 +227,46 @@ function downloadAppointmentIcs(block) {
   link.click();
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+async function requestVoiceToken(language) {
+  const response = await fetch(VOICE_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      language,
+      participantName: language === "ka" ? "Georgia MOD visitor (KA)" : "Georgia MOD visitor (EN)",
+    }),
+  });
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(body?.error || `Voice service returned ${response.status}`);
+    error.status = response.status;
+    error.missing = body?.missing || null;
+    throw error;
+  }
+
+  if (!body?.conversationToken) {
+    throw new Error("Voice service did not return a conversation token.");
+  }
+
+  return body.conversationToken;
+}
+
+async function requestMicrophonePermission() {
+  if (!navigator?.mediaDevices?.getUserMedia) {
+    throw new DOMException("Microphone is not available in this browser.", "NotAllowedError");
+  }
+
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  stream.getTracks().forEach((track) => track.stop());
+}
+
+function getVoiceErrorText(error, copy) {
+  if (error?.status === 503 || error?.missing) return copy.voiceSetupMissing;
+  if (error?.name === "NotAllowedError" || error?.name === "SecurityError") return copy.voiceMicDenied;
+  return copy.voiceGenericError;
 }
 
 /* Markdown renderer */
@@ -548,6 +611,11 @@ function App() {
   const [inputText, setInputText] = useState("");
   const [status, setStatus] = useState("disconnected");
   const [isThinking, setIsThinking] = useState(false);
+  const [voiceError, setVoiceError] = useState("");
+  const [voiceStatus, setVoiceStatus] = useState("disconnected");
+  const [voiceIsSpeaking, setVoiceIsSpeaking] = useState(false);
+  const [voiceConversationId, setVoiceConversationId] = useState(null);
+  const [voiceLastMessage, setVoiceLastMessage] = useState(null);
 
   const abortControllerRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -555,9 +623,12 @@ function App() {
   const thinkingStartRef = useRef(null);
   const pendingChunksRef = useRef([]);
   const flushTimerRef = useRef(null);
+  const voiceConversationRef = useRef(null);
+  const voiceStartIdRef = useRef(0);
 
   const t = T[lang] || T.en;
   const currentLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
+
   const settleMessages = useCallback((items) => {
     const last = items[items.length - 1];
     if (last?.role === "ai-stream") {
@@ -577,6 +648,23 @@ function App() {
     }
     pendingChunksRef.current = [];
     setIsThinking(false);
+  }, []);
+
+  const endVoiceCall = useCallback(async () => {
+    voiceStartIdRef.current += 1;
+    const conversation = voiceConversationRef.current;
+    voiceConversationRef.current = null;
+    setVoiceStatus("disconnected");
+    setVoiceConversationId(null);
+    setVoiceIsSpeaking(false);
+
+    if (!conversation) return;
+
+    try {
+      await conversation.endSession();
+    } catch {
+      // The SDK may already have closed the session after a disconnect/error event.
+    }
   }, []);
 
   useEffect(() => { if (!langMenuOpen) return; const h = () => setLangMenuOpen(false); document.addEventListener("click", h); return () => document.removeEventListener("click", h); }, [langMenuOpen]);
@@ -625,6 +713,15 @@ function App() {
       documentElement.style.overscrollBehavior = previousHtmlOverscroll;
     };
   }, [isOpen]);
+  useEffect(() => {
+    return () => {
+      const conversation = voiceConversationRef.current;
+      voiceConversationRef.current = null;
+      if (conversation) {
+        void conversation.endSession().catch(() => {});
+      }
+    };
+  }, []);
 
   /* HTTP Streaming */
   const flushPendingChunks = useCallback(() => { const c = pendingChunksRef.current; if (!c.length) return; pendingChunksRef.current = []; setIsThinking(false); setMessages(p => [...p, { role: "ai-stream", text: c.join(""), ts: Date.now() }]); }, []);
@@ -815,6 +912,108 @@ function App() {
     sendToAPI(updated);
   }, [status, messages, settleMessages, lang, selectedService, cancelPendingResponse, sendToAPI]);
 
+  const handleVoiceToggle = useCallback(async () => {
+    if (voiceStatus === "connected" || voiceStatus === "connecting") {
+      await endVoiceCall();
+      setVoiceError("");
+      return;
+    }
+
+    const startId = voiceStartIdRef.current + 1;
+    voiceStartIdRef.current = startId;
+    const isCurrentVoiceStart = () => voiceStartIdRef.current === startId;
+
+    setVoiceStatus("connecting");
+    setVoiceIsSpeaking(false);
+    setVoiceError("");
+    setVoiceConversationId(null);
+    setVoiceLastMessage(null);
+
+    if (view !== "chat") {
+      cancelPendingResponse();
+      setSelectedService(null);
+      setView("chat");
+      setStatus("connected");
+      setMessages([{ role: "ai", text: t.howHelp, ts: Date.now() }]);
+    }
+
+    try {
+      await requestMicrophonePermission();
+      const conversationToken = await requestVoiceToken(lang);
+      const { Conversation } = await import("@elevenlabs/client");
+      const conversation = await Conversation.startSession({
+        conversationToken,
+        connectionType: "webrtc",
+        overrides: {
+          agent: {
+            language: lang,
+          },
+        },
+        dynamicVariables: {
+          interface_language: lang,
+          app: "georgia-mod-assistant",
+        },
+        useWakeLock: true,
+        onConnect: (event = {}) => {
+          if (!isCurrentVoiceStart()) return;
+          setVoiceStatus("connected");
+          setVoiceConversationId(event.conversationId || voiceConversationRef.current?.getId?.() || null);
+          setVoiceError("");
+          setVoiceLastMessage(null);
+        },
+        onDisconnect: () => {
+          if (!isCurrentVoiceStart()) return;
+          voiceConversationRef.current = null;
+          setVoiceStatus("disconnected");
+          setVoiceConversationId(null);
+          setVoiceIsSpeaking(false);
+        },
+        onError: () => {
+          if (!isCurrentVoiceStart()) return;
+          voiceConversationRef.current = null;
+          setVoiceStatus("disconnected");
+          setVoiceConversationId(null);
+          setVoiceIsSpeaking(false);
+          setVoiceError(t.voiceGenericError);
+        },
+        onStatusChange: (event = {}) => {
+          if (!isCurrentVoiceStart()) return;
+          const nextStatus = typeof event === "string" ? event : event.status;
+          if (nextStatus) setVoiceStatus(nextStatus);
+        },
+        onModeChange: (event = {}) => {
+          if (!isCurrentVoiceStart()) return;
+          const mode = typeof event === "string" ? event : event.mode;
+          setVoiceIsSpeaking(mode === "speaking");
+        },
+        onMessage: (event = {}) => {
+          if (!isCurrentVoiceStart()) return;
+          const text = String(event.message || event.text || event.content || "").trim();
+          if (!text) return;
+          setVoiceLastMessage({
+            role: event.role || "agent",
+            text,
+          });
+        },
+      });
+
+      if (!isCurrentVoiceStart()) {
+        await conversation.endSession().catch(() => {});
+        return;
+      }
+
+      voiceConversationRef.current = conversation;
+      setVoiceConversationId(conversation.getId?.() || null);
+      setVoiceStatus("connected");
+    } catch (error) {
+      if (!isCurrentVoiceStart()) return;
+      setVoiceConversationId(null);
+      setVoiceStatus("disconnected");
+      setVoiceIsSpeaking(false);
+      setVoiceError(getVoiceErrorText(error, t));
+    }
+  }, [voiceStatus, endVoiceCall, view, cancelPendingResponse, t, lang]);
+
   /* Contextual suggested replies */
   const suggestedReplies = useMemo(() => {
     return getSuggestedReplies({ messages, isThinking, language: lang });
@@ -863,14 +1062,27 @@ function App() {
 
   const goHome = () => {
     if (abortControllerRef.current) abortControllerRef.current.abort();
+    if (voiceStatus === "connected" || voiceStatus === "connecting") void endVoiceCall();
     setView("home"); setSelectedService(null);
     setStatus("disconnected");
     setMessages([]); setIsThinking(false);
+    setVoiceError("");
+    setVoiceConversationId(null);
+    setVoiceLastMessage(null);
   };
 
   const isConnected = status === "connected";
   const statusLabel = isConnected ? t.chatWith : t.offline;
   const lastMsg = messages[messages.length - 1];
+  const isVoiceConnecting = voiceStatus === "connecting";
+  const isVoiceConnected = voiceStatus === "connected";
+  const isVoiceActive = isVoiceConnecting || isVoiceConnected;
+  const voiceActivityLabel = isVoiceConnecting
+    ? t.voiceConnecting
+    : voiceIsSpeaking
+    ? t.voiceSpeaking
+    : t.voiceListening;
+  const headerStatusLabel = view === "home" ? t.aiAssistant : (isVoiceActive ? voiceActivityLabel : statusLabel);
 
   return (
     <>
@@ -925,10 +1137,27 @@ function App() {
               <img src="/logo.png" alt="MOD" className="header-avatar" />
               <div className="header-info">
                 <span className="header-name">{view === "home" ? t.ministry : (lang === "ka" ? "\u10DC\u10D8\u10D9\u10D0" : "Nika")}</span>
-                <span className="header-status">{view === "home" ? t.aiAssistant : statusLabel}</span>
+                <span className="header-status">{headerStatusLabel}</span>
               </div>
             </div>
             <div className="header-actions">
+              <button
+                className={`header-action-btn voice-call-btn ${isVoiceActive ? "active" : ""} ${voiceIsSpeaking ? "speaking" : ""}`}
+                onClick={handleVoiceToggle}
+                aria-label={isVoiceActive ? t.endVoiceCall : t.callNika}
+                title={isVoiceActive ? t.endVoiceCall : t.callNika}
+              >
+                {isVoiceActive ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10.1 13.9a14.6 14.6 0 01-4-4l2.1-2.1a1.5 1.5 0 00.35-1.55L7.7 3.7A1.5 1.5 0 006.28 2.7H3.4A1.4 1.4 0 002 4.1 17.9 17.9 0 0019.9 22a1.4 1.4 0 001.4-1.4v-2.88a1.5 1.5 0 00-1-1.42l-2.55-.85a1.5 1.5 0 00-1.55.35l-2.1 2.1a14.6 14.6 0 01-4-4z" />
+                    <line x1="4" y1="20" x2="20" y2="4" />
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.12.9.32 1.77.59 2.61a2 2 0 01-.45 2.11L8 9.69a16 16 0 006.31 6.31l1.25-1.25a2 2 0 012.11-.45c.84.27 1.71.47 2.61.59A2 2 0 0122 16.92z" />
+                  </svg>
+                )}
+              </button>
               <div className="lang-selector">
                 <button className="lang-trigger-btn" onClick={(e) => { e.stopPropagation(); setLangMenuOpen(v => !v); }}><span className="lang-flag"><currentLang.Flag /></span><span className="lang-code">{currentLang.displayCode}</span></button>
                 {langMenuOpen && <div className="lang-menu">{LANGUAGES.map(l => <button key={l.code} className={`lang-option ${l.code === lang ? "active" : ""}`} onClick={() => handleLangChange(l.code)}><span className="lang-flag"><l.Flag /></span><span className="lang-label">{l.label}</span></button>)}</div>}
@@ -986,6 +1215,37 @@ function App() {
           {view === "chat" && (
             <>
               <div className="panel-messages">
+                {(isVoiceActive || voiceError) && (
+                  <div className={`voice-session-card ${voiceError ? "voice-session-error" : ""}`}>
+                    <div className="voice-session-indicator" aria-hidden="true">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+                    <div className="voice-session-copy">
+                      <span className="voice-session-title">
+                        {voiceError ? t.voiceErrorTitle : (isVoiceConnected ? t.voiceLive : t.voiceConnecting)}
+                      </span>
+                      <span className="voice-session-status">
+                        {voiceError || (isVoiceConnected ? voiceActivityLabel : t.voiceStartHint)}
+                      </span>
+                      {voiceLastMessage && !voiceError ? (
+                        <span className="voice-session-transcript">
+                          {voiceLastMessage.role === "user" ? (lang === "ka" ? "\u10D7\u10E5\u10D5\u10D4\u10DC" : "You") : (lang === "ka" ? "\u10DC\u10D8\u10D9\u10D0" : "Nika")}: {voiceLastMessage.text}
+                        </span>
+                      ) : null}
+                      {voiceConversationId && !voiceError ? (
+                        <span className="voice-session-id">ID {voiceConversationId}</span>
+                      ) : null}
+                    </div>
+                    {isVoiceActive ? (
+                      <button type="button" className="voice-session-end" onClick={handleVoiceToggle}>
+                        {t.endVoiceCall}
+                      </button>
+                    ) : null}
+                  </div>
+                )}
+
                 {messages.map((msg, i) => (
                   <div key={i} className={`msg ${msg.role === "user" ? "msg-user" : "msg-agent"}`}>
                     <div className="msg-content">
@@ -1037,9 +1297,9 @@ function App() {
         </div>
 
         <button className={`collapse-btn ${isOpen ? "visible" : ""}`} onClick={() => setIsOpen(false)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9" /></svg></button>
-        <button className={`trigger ${isOpen ? "hidden" : ""}`} onClick={() => setIsOpen(true)}>
+        <button className={`trigger ${isOpen ? "hidden" : ""} ${isVoiceActive ? "voice-live" : ""}`} onClick={() => setIsOpen(true)}>
           <div className="trigger-avatar-wrap"><img src="/logo.png" alt="MOD" className="trigger-avatar" /></div>
-          <div className="trigger-cta"><svg className="trigger-chat-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" /></svg><span>{lang === "ka" ? "\u10E9\u10D0\u10E2\u10D8 \u10DC\u10D8\u10D9\u10D0\u10E1\u10D7\u10D0\u10DC" : "Chat with Nika"}</span></div>
+          <div className="trigger-cta"><svg className="trigger-chat-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" /></svg><span>{isVoiceActive ? t.voiceLive : (lang === "ka" ? "\u10E9\u10D0\u10E2\u10D8 \u10DC\u10D8\u10D9\u10D0\u10E1\u10D7\u10D0\u10DC" : "Chat with Nika")}</span></div>
         </button>
       </div>
     </>

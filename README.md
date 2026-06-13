@@ -18,15 +18,17 @@ Georgia reinstated mandatory military service on January 1, 2025 via the new Def
 - **Frontend:** React 19 + Vite
 - **Backend:** Vercel Serverless Function (`/api/chat`) — deploys together with the frontend
 - **AI:** GPT-5.4 primary (OpenAI Responses API) with Claude Sonnet fallback (Anthropic API)
+- **Voice:** ElevenLabs Conversational AI / Speech Engine via `@elevenlabs/client`
 - **Languages:** Georgian (formal თქვენ-register) + English
 
 ## Architecture
 
 ```
-Browser widget ──POST /api/chat──▶ Vercel Function ──▶ OpenAI GPT-5.4
-      ▲                                │                    │
-      │       SSE stream + booking card│              Anthropic fallback
-      └────────────────────────────────┘
+Browser widget ──POST /api/chat────────────────▶ Vercel Function ──▶ OpenAI GPT-5.4
+      │                                             │                    │
+      │              SSE stream + booking card      │              Anthropic fallback
+      ├──POST /api/elevenlabs-conversation────────▶ ElevenLabs conversation token
+      └──WebRTC voice session─────────────────────▶ ElevenLabs Agent / Speech Engine
 ```
 
 Everything ships from this one repo: `git push` deploys frontend and backend together. The knowledge base lives in `knowledge-base.txt` and is embedded into the function via a generated module.
@@ -77,11 +79,19 @@ OPENAI_MODEL=gpt-5.4          # optional override
 ANTHROPIC_MODEL=claude-sonnet-4-5-20250929  # optional override
 AI_PROVIDER=openai            # optional: openai | anthropic
 AI_FALLBACK_PROVIDER=anthropic
+
+ELEVENLABS_API_KEY=...        # optional — enables voice calls
+ELEVENLABS_SPEECH_ENGINE_ID=seng_...  # optional — preferred for Speech Engine voice
+ELEVENLABS_AGENT_ID=agent_... # optional fallback if no Speech Engine ID is set
+ELEVENLABS_BRANCH_ID=...      # optional
+ELEVENLABS_ENVIRONMENT=production # optional
 ```
 
 If you only have an OpenAI key, leave `AI_PROVIDER` unset or set it to `openai`. Do not set `AI_PROVIDER=anthropic` unless `ANTHROPIC_API_KEY` is also configured, or set `AI_FALLBACK_PROVIDER=openai`.
 
 No client-side env vars are needed — the widget calls its own origin.
+
+Voice calls use `/api/elevenlabs-conversation` to mint a short-lived ElevenLabs WebRTC conversation token. The browser never receives `ELEVENLABS_API_KEY`. The token endpoint accepts either an ElevenLabs Agent ID or a Speech Engine ID (`seng_...`), matching ElevenLabs' conversation token API. A true Speech Engine still needs a publicly reachable upstream WebSocket configured in ElevenLabs; Vercel Serverless Functions do not host that upstream WebSocket.
 
 Tests that talk to a deployed backend use `CHAT_API_URL` (defaults to `http://localhost:5173/api/chat`).
 
@@ -105,6 +115,7 @@ Tests that talk to a deployed backend use `CHAT_API_URL` (defaults to `http://lo
 georgia-mod-assistant/
 ├── api/
 │   ├── chat.js              # Vercel function: validation, rate limit, provider routing, SSE
+│   ├── elevenlabs-conversation.js # Vercel function: ElevenLabs WebRTC token minting
 │   └── _lib/
 │       ├── prompt.js        # System prompt (concise style + appointment protocol)
 │       ├── providers.js     # OpenAI + Anthropic streaming clients

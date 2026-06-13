@@ -16,6 +16,11 @@ const DIAGNOSTIC_ENV_NAMES = [
   "ANTHROPIC_MODEL",
   "AI_PROVIDER",
   "AI_FALLBACK_PROVIDER",
+  "ELEVENLABS_API_KEY",
+  "ELEVENLABS_SPEECH_ENGINE_ID",
+  "ELEVENLABS_AGENT_ID",
+  "ELEVENLABS_BRANCH_ID",
+  "ELEVENLABS_ENVIRONMENT",
 ];
 
 export class ProviderError extends Error {
@@ -57,6 +62,7 @@ export function getEnvDiagnostics() {
     providers: {
       openai: hasProviderKey("openai"),
       anthropic: hasProviderKey("anthropic"),
+      elevenlabs: Boolean(getEnvValue("ELEVENLABS_API_KEY") && (getEnvValue("ELEVENLABS_SPEECH_ENGINE_ID") || getEnvValue("ELEVENLABS_AGENT_ID"))),
     },
     exact: {},
     nearMiss: {},
@@ -65,6 +71,10 @@ export function getEnvDiagnostics() {
       AI_FALLBACK_PROVIDER: getEnvValue("AI_FALLBACK_PROVIDER") || null,
       OPENAI_MODEL: getEnvValue("OPENAI_MODEL") || null,
       ANTHROPIC_MODEL: getEnvValue("ANTHROPIC_MODEL") || null,
+      ELEVENLABS_SPEECH_ENGINE_ID: getEnvValue("ELEVENLABS_SPEECH_ENGINE_ID") || null,
+      ELEVENLABS_AGENT_ID: getEnvValue("ELEVENLABS_AGENT_ID") || null,
+      ELEVENLABS_BRANCH_ID: getEnvValue("ELEVENLABS_BRANCH_ID") || null,
+      ELEVENLABS_ENVIRONMENT: getEnvValue("ELEVENLABS_ENVIRONMENT") || null,
     },
     vercel: {
       env: process.env.VERCEL_ENV || null,
