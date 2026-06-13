@@ -67,6 +67,8 @@ const T = {
     voiceListening: "Listening",
     voiceSpeaking: "Nika is speaking",
     voiceStartHint: "Speak with Nika by voice.",
+    voiceChatLockedNote: "Voice conversation is in progress. Text chat is paused until the call ends.",
+    voiceChatLockedPlaceholder: "Voice conversation is in progress...",
     voiceErrorTitle: "Voice mode unavailable",
     voiceSetupMissing: "ElevenLabs voice is not configured yet. Add ELEVENLABS_API_KEY and ELEVENLABS_SPEECH_ENGINE_ID in Vercel, then redeploy.",
     voiceMicDenied: "Microphone access was blocked. Allow microphone access in the browser and try again.",
@@ -102,6 +104,8 @@ const T = {
     voiceListening: "\u10D2\u10D8\u10E1\u10DB\u10D4\u10DC\u10D7",
     voiceSpeaking: "\u10DC\u10D8\u10D9\u10D0 \u10D2\u10DE\u10D0\u10E1\u10E3\u10EE\u10DD\u10D1\u10D7",
     voiceStartHint: "\u10D4\u10E1\u10D0\u10E3\u10D1\u10E0\u10D4\u10D7 \u10DC\u10D8\u10D9\u10D0\u10E1 \u10EE\u10DB\u10D8\u10D7.",
+    voiceChatLockedNote: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10E1\u10D0\u10E3\u10D1\u10D0\u10E0\u10D8 \u10DB\u10D8\u10DB\u10D3\u10D8\u10DC\u10D0\u10E0\u10D4\u10DD\u10D1\u10E1. \u10E2\u10D4\u10E5\u10E1\u10E2\u10E3\u10E0\u10D8 \u10E9\u10D0\u10E2\u10D8 \u10D3\u10E0\u10DD\u10D4\u10D1\u10D8\u10D7 \u10D2\u10D0\u10DB\u10DD\u10E0\u10D7\u10E3\u10DA\u10D8\u10D0.",
+    voiceChatLockedPlaceholder: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10E1\u10D0\u10E3\u10D1\u10D0\u10E0\u10D8 \u10DB\u10D8\u10DB\u10D3\u10D8\u10DC\u10D0\u10E0\u10D4\u10DD\u10D1\u10E1...",
     voiceErrorTitle: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10E0\u10D4\u10DF\u10D8\u10DB\u10D8 \u10DB\u10D8\u10E3\u10EC\u10D5\u10D3\u10DD\u10DB\u10D4\u10DA\u10D8\u10D0",
     voiceSetupMissing: "ElevenLabs voice \u10EF\u10D4\u10E0 \u10D0\u10E0 \u10D0\u10E0\u10D8\u10E1 \u10D3\u10D0\u10D9\u10DD\u10DC\u10E4\u10D8\u10D2\u10E3\u10E0\u10D8\u10E0\u10D4\u10D1\u10E3\u10DA\u10D8. Vercel-\u10E8\u10D8 \u10D3\u10D0\u10D0\u10DB\u10D0\u10E2\u10D4\u10D7 ELEVENLABS_API_KEY \u10D3\u10D0 ELEVENLABS_SPEECH_ENGINE_ID, \u10E8\u10D4\u10DB\u10D3\u10D4\u10D2 \u10D2\u10D0\u10DC\u10D0\u10D0\u10EE\u10DA\u10D4\u10D7 deploy.",
     voiceMicDenied: "\u10DB\u10D8\u10D9\u10E0\u10DD\u10E4\u10DD\u10DC\u10D6\u10D4 \u10EC\u10D5\u10D3\u10DD\u10DB\u10D0 \u10D3\u10D0\u10D8\u10D1\u10DA\u10DD\u10D9\u10D0. \u10D3\u10D0\u10E3\u10E8\u10D5\u10D8\u10D7 \u10DB\u10D8\u10D9\u10E0\u10DD\u10E4\u10DD\u10DC\u10D8 \u10D1\u10E0\u10D0\u10E3\u10D6\u10D4\u10E0\u10E8\u10D8 \u10D3\u10D0 \u10E1\u10EA\u10D0\u10D3\u10D4\u10D7 \u10D7\u10D0\u10D5\u10D8\u10D3\u10D0\u10DC.",
@@ -859,7 +863,7 @@ function App() {
 
   const sendMessage = useCallback(() => {
     const txt = inputText.trim();
-    if (!txt || status !== "connected") return;
+    if (!txt || status !== "connected" || voiceStatus === "connected" || voiceStatus === "connecting") return;
     setInputText("");
     if (inputRef.current) inputRef.current.style.height = "auto";
     const userMsg = { role: "user", text: txt, ts: Date.now() };
@@ -880,7 +884,7 @@ function App() {
     const updated = [...baseMessages, userMsg];
     setMessages(updated);
     sendToAPI(updated);
-  }, [inputText, status, messages, settleMessages, lang, selectedService, cancelPendingResponse, sendToAPI]);
+  }, [inputText, status, voiceStatus, messages, settleMessages, lang, selectedService, cancelPendingResponse, sendToAPI]);
 
   const handleKeyDown = useCallback((e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }, [sendMessage]);
 
@@ -893,7 +897,7 @@ function App() {
   }, [messages, sendToAPI]);
 
   const handleQuickReply = useCallback((text) => {
-    if (status !== "connected") return;
+    if (status !== "connected" || voiceStatus === "connected" || voiceStatus === "connecting") return;
     const userMsg = { role: "user", text, ts: Date.now() };
     const baseMessages = settleMessages(messages);
     const localReply = getCenterLookupReply({
@@ -912,7 +916,7 @@ function App() {
     const updated = [...baseMessages, userMsg];
     setMessages(updated);
     sendToAPI(updated);
-  }, [status, messages, settleMessages, lang, selectedService, cancelPendingResponse, sendToAPI]);
+  }, [status, voiceStatus, messages, settleMessages, lang, selectedService, cancelPendingResponse, sendToAPI]);
 
   const handleVoiceToggle = useCallback(async () => {
     if (voiceStatus === "connected" || voiceStatus === "connecting") {
@@ -1079,6 +1083,7 @@ function App() {
   const isVoiceConnecting = voiceStatus === "connecting";
   const isVoiceConnected = voiceStatus === "connected";
   const isVoiceActive = isVoiceConnecting || isVoiceConnected;
+  const isTextChatEnabled = isConnected && !isVoiceActive;
   const voiceActivityLabel = isVoiceConnecting
     ? t.voiceConnecting
     : voiceIsSpeaking
@@ -1231,6 +1236,9 @@ function App() {
                       <span className="voice-session-status">
                         {voiceError || (isVoiceConnected ? voiceActivityLabel : t.voiceStartHint)}
                       </span>
+                      {isVoiceActive && !voiceError ? (
+                        <span className="voice-session-lock-note">{t.voiceChatLockedNote}</span>
+                      ) : null}
                       {voiceLastMessage && !voiceError ? (
                         <span className="voice-session-transcript">
                           {voiceLastMessage.role === "user" ? (lang === "ka" ? "\u10D7\u10E5\u10D5\u10D4\u10DC" : "You") : (lang === "ka" ? "\u10DC\u10D8\u10D9\u10D0" : "Nika")}: {voiceLastMessage.text}
@@ -1276,7 +1284,7 @@ function App() {
                 )}
 
                 {/* Suggested quick replies */}
-                {suggestedReplies.length > 0 && (
+                {suggestedReplies.length > 0 && !isVoiceActive && (
                   <div className="suggested-replies">
                     {suggestedReplies.map((reply, i) => (
                       <button key={i} className="suggested-reply-chip" onClick={() => handleQuickReply(reply)}>{reply}</button>
@@ -1290,8 +1298,8 @@ function App() {
 
               <div className="panel-input-wrap">
                 <div className="panel-input-box">
-                  <textarea ref={inputRef} className="panel-textarea" placeholder={t.typePlaceholder} value={inputText} onChange={e => { setInputText(e.target.value); e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 150) + "px"; }} onKeyDown={handleKeyDown} disabled={!isConnected} rows={1} />
-                  <div className="panel-input-actions"><button className="send-btn" onClick={sendMessage} disabled={!inputText.trim() || !isConnected}><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg></button></div>
+                  <textarea ref={inputRef} className="panel-textarea" placeholder={isVoiceActive ? t.voiceChatLockedPlaceholder : t.typePlaceholder} value={inputText} onChange={e => { setInputText(e.target.value); e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 150) + "px"; }} onKeyDown={handleKeyDown} disabled={!isTextChatEnabled} rows={1} />
+                  <div className="panel-input-actions"><button className="send-btn" onClick={sendMessage} disabled={!inputText.trim() || !isTextChatEnabled}><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg></button></div>
                 </div>
               </div>
             </>
