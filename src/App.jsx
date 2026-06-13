@@ -61,7 +61,9 @@ const T = {
     faqTitle: "FAQ",
     faqDesc: "Common questions answered",
     callNika: "Start voice call",
+    voiceCallLabel: "Call",
     endVoiceCall: "End voice call",
+    endVoiceCallLabel: "End",
     voiceConnecting: "Connecting voice...",
     voiceLive: "Voice call live",
     voiceListening: "Listening",
@@ -98,7 +100,9 @@ const T = {
     faqTitle: "\u10EE\u10E8\u10D8\u10E0\u10D0\u10D3 \u10D3\u10D0\u10E1\u10DB\u10E3\u10DA\u10D8 \u10D9\u10D8\u10D7\u10EE\u10D5\u10D4\u10D1\u10D8",
     faqDesc: "\u10DE\u10D0\u10E1\u10E3\u10EE\u10D4\u10D1\u10D8 \u10D2\u10D0\u10D5\u10E0\u10EA\u10D4\u10DA \u10D9\u10D8\u10D7\u10EE\u10D5\u10D4\u10D1\u10D6\u10D4",
     callNika: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D6\u10D0\u10E0\u10D8\u10E1 \u10D3\u10D0\u10EC\u10E7\u10D4\u10D1\u10D0",
+    voiceCallLabel: "\u10D6\u10D0\u10E0\u10D8",
     endVoiceCall: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D6\u10D0\u10E0\u10D8\u10E1 \u10D3\u10D0\u10E1\u10E0\u10E3\u10DA\u10D4\u10D1\u10D0",
+    endVoiceCallLabel: "\u10D3\u10D0\u10E1\u10E0\u10E3\u10DA\u10D4\u10D1\u10D0",
     voiceConnecting: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D9\u10D0\u10D5\u10E8\u10D8\u10E0\u10D8...",
     voiceLive: "\u10EE\u10DB\u10DD\u10D5\u10D0\u10DC\u10D8 \u10D6\u10D0\u10E0\u10D8 \u10DB\u10D8\u10DB\u10D3\u10D8\u10DC\u10D0\u10E0\u10D4\u10DD\u10D1\u10E1",
     voiceListening: "\u10D2\u10D8\u10E1\u10DB\u10D4\u10DC\u10D7",
@@ -1164,6 +1168,7 @@ function App() {
                     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.12.9.32 1.77.59 2.61a2 2 0 01-.45 2.11L8 9.69a16 16 0 006.31 6.31l1.25-1.25a2 2 0 012.11-.45c.84.27 1.71.47 2.61.59A2 2 0 0122 16.92z" />
                   </svg>
                 )}
+                <span className="voice-call-label">{isVoiceActive ? t.endVoiceCallLabel : t.voiceCallLabel}</span>
               </button>
               <div className="lang-selector">
                 <button className="lang-trigger-btn" onClick={(e) => { e.stopPropagation(); setLangMenuOpen(v => !v); }}><span className="lang-flag"><currentLang.Flag /></span><span className="lang-code">{currentLang.displayCode}</span></button>
@@ -1191,7 +1196,6 @@ function App() {
                   </svg>
                 )}
               </button>
-              <button className="header-action-btn" onClick={() => setIsOpen(false)}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
             </div>
           </div>
 

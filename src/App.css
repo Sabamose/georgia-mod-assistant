@@ -37,7 +37,7 @@
 .header-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .header-name { font-size: 14px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .header-status { font-size: 12px; font-weight: 400; color: rgba(255,255,255,.7); }
-.header-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
 /* Language */
 .lang-selector { position: relative; }
@@ -54,9 +54,11 @@
 .header-action-btn { width: 32px; height: 32px; border: none; border-radius: 8px; background: transparent; color: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; flex-shrink: 0; font-family: inherit; }
 .header-action-btn:hover { background: rgba(255,255,255,.15); color: #fff; }
 .header-expand-btn.active { background: rgba(255,255,255,.15); color: #fff; }
-.voice-call-btn { position: relative; }
-.voice-call-btn.active { background: rgba(255,255,255,.18); color: #fff; }
-.voice-call-btn.active::after { content: ""; position: absolute; right: 5px; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: #36d399; box-shadow: 0 0 0 2px rgba(45,74,46,.8); }
+.voice-call-btn { position: relative; width: auto; min-width: 76px; padding: 0 11px; gap: 6px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; background: rgba(255,255,255,.16); color: #fff; font-weight: 800; }
+.voice-call-btn:hover { background: rgba(255,255,255,.24); border-color: rgba(255,255,255,.5); }
+.voice-call-label { font-size: 12px; line-height: 1; white-space: nowrap; }
+.voice-call-btn.active { background: rgba(34,197,94,.22); border-color: rgba(134,239,172,.6); color: #fff; }
+.voice-call-btn.active::after { content: ""; position: absolute; right: 6px; top: 4px; width: 7px; height: 7px; border-radius: 50%; background: #36d399; box-shadow: 0 0 0 2px rgba(45,74,46,.8); }
 .voice-call-btn.speaking::after { animation: voicePulse 1s ease-in-out infinite; }
 @keyframes voicePulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.45); opacity: .65; } }
 
@@ -280,6 +282,8 @@
   .lang-flag svg { width: 18px; height: 12px; }
   .lang-code { font-size: 11px; }
   .header-action-btn { width: 36px; height: 36px; }
+  .voice-call-btn { width: auto; min-width: 64px; padding: 0 9px; gap: 5px; }
+  .voice-call-label { font-size: 11px; }
   .header-expand-btn { display: none; }
   .home-welcome { padding: 20px 20px 6px; }
   .home-welcome-title { font-size: 20px; }
